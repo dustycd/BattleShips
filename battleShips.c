@@ -6,7 +6,7 @@
 
 typedef struct 
 {
-    char * name;
+    char name[20];
     int size;
     int hits;
 } Ship;
@@ -31,12 +31,80 @@ void displayGrid(char grid[SIZE][SIZE]) {
     }
 }
 
+int If_sunk_(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int * Ships)
+{
+    if(Carrier->size == Carrier->hits)
+    {
+        Ships--;
+        return 1;
+    }
+    else if(Battleship->size == Battleship->hits)
+    {
+        Ships--;
+        return 1;
+    }
+    else if(Destroyer->size == Destroyer->hits)
+    {
+        Ships--;
+        return 1;
+    }
+    else if(Submarine->size == Submarine->hits)
+    {
+        Ships--;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
     int rows = SIZE;
     int columns = SIZE;
     int** GridOne = (int**)malloc(rows * sizeof(int*));
+    Ship P1Carrier= {
+        .name = "Carrier",
+        .size = 5,
+        .hits = 0,
+    };     
+    Ship P1Battleship= {
+        .name = "Battleship",
+        .size = 4,
+        .hits = 0,
+    };       
+    Ship P1Destroyer= {
+        .name = "Destroyer",
+        .size = 3,
+        .hits = 0,
+    };
+    Ship P1Submarine= {
+        .name = "Submarine",
+        .size = 2,
+        .hits = 0,
+    };
+    Ship P2Carrier= {
+        .name = "Carrier",
+        .size = 5,
+        .hits = 0,
+    };     
+    Ship P2Battleship= {
+        .name = "Battleship",
+        .size = 4,
+        .hits = 0,
+    };       
+    Ship P2Destroyer= {
+        .name = "Destroyer",
+        .size = 3,
+        .hits = 0,
+    };
+    Ship P2Submarine= {
+        .name = "Submarine",
+        .size = 2,
+        .hits = 0,
+    };
     if(GridOne == NULL)
     {
         printf("Allocation for rows in grid1 has failed!");
