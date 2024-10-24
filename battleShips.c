@@ -4,6 +4,14 @@
 
 #define SIZE 10
 
+typedef struct 
+{
+    char * name;
+    int size;
+    int hits;
+} Ship;
+
+
 void initializeGrid(char grid[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -25,6 +33,23 @@ void displayGrid(char grid[SIZE][SIZE]) {
 
 int main() {
     char grid1[SIZE][SIZE], grid2[SIZE][SIZE];
+
+    int rows = SIZE;
+    int columns = SIZE;
+    int** GridOne = (int**)malloc(rows * sizeof(int*));
+    if(GridOne == NULL)
+    {
+        printf("no space left");
+        return -1;
+    }
+    for(int i= 0; i< rows; i++)
+    {
+        GridOne[i]= (int*)malloc(columns *sizeof(int));
+        if(GridOne[i] == NULL)
+        {
+            
+        }
+    }
     char difficulty; 
     char player1[10], player2[10];
 
