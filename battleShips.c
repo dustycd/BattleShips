@@ -32,14 +32,14 @@ void displayGrid(char grid[SIZE][SIZE]) {
 }
 
 int main() {
-    char grid1[SIZE][SIZE], grid2[SIZE][SIZE];
-
+    int p1_ships = 4;
+    int p2_ships = 4;
     int rows = SIZE;
     int columns = SIZE;
     int** GridOne = (int**)malloc(rows * sizeof(int*));
     if(GridOne == NULL)
     {
-        printf("no space left");
+        printf("Allocation for rows in grid1 has failed!");
         return -1;
     }
     for(int i= 0; i< rows; i++)
@@ -47,19 +47,71 @@ int main() {
         GridOne[i]= (int*)malloc(columns *sizeof(int));
         if(GridOne[i] == NULL)
         {
-            
+            printf("Allocation for columns in grid1 has failed!");
+            return -1;
         }
     }
-    char difficulty; 
+
+    int** GridTwo = (int**)malloc(rows * sizeof(int*));
+    if(GridTwo == NULL)
+    {
+        printf("Allocation for rows in grid2 has failed!");
+        return -1;
+    }
+    for(int i= 0; i< rows; i++)
+    {
+        GridTwo[i]= (int*)malloc(columns *sizeof(int));
+        if(GridTwo[i] == NULL)
+        {
+            printf("Allocation for columns in grid2 has failed!");
+            return -1;
+        }
+    }
+
+    int** Hiddenp1 = (int**)malloc(rows * sizeof(int*));
+    if(Hiddenp1 == NULL)
+    {
+        printf("Allocation for rows in Hiddenp1 has failed!");
+        return -1;
+    }
+    for(int i= 0; i< rows; i++)
+    {
+        GridOne[i]= (int*)malloc(columns *sizeof(int));
+        if(GridOne[i] == NULL)
+        {
+            printf("Allocation for columns in Hiddenp1 has failed!");
+            return -1;
+        }
+    }
+
+    int** Hiddenp2 = (int**)malloc(rows * sizeof(int*));
+    if(Hiddenp2 == NULL)
+    {
+        printf("Allocation for rows in Hiddenp2 has failed!");
+        return -1;
+    }
+    for(int i= 0; i< rows; i++)
+    {
+        GridOne[i]= (int*)malloc(columns *sizeof(int));
+        if(GridOne[i] == NULL)
+        {
+            printf("Allocation for columns in Hiddenp2 has failed!");
+            return -1;
+        }
+    }
+
+    int difficulty; 
     char player1[10], player2[10];
 
     srand(time(0));
 
-    initializeGrid(grid1);
-    initializeGrid(grid2);
+    initializeGrid(GridOne);
+    initializeGrid(GridTwo);
+    initializeGrid(Hiddenp1);
+    initializeGrid(Hiddenp2);
 
-    printf("Choose difficulty level (E for Easy, H for Hard): ");
-    scanf("%s", &difficulty);
+    printf("Choose difficulty level (0 for Easy, 1 for Hard): ");
+    scanf("%d", &difficulty);
 
     printf("Enter name for Player 1: ");
     scanf("%s", player1);
