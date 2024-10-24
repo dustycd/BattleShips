@@ -59,6 +59,26 @@ int If_sunk_(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, 
     }
 }
 
+void fire(char oppGrid[SIZE][SIZE], int mode) {
+    char coord[3];
+    printf("Enter coordinates: ");
+    scanf("%s", coord);
+    
+    int x = coord[0] - 'A';
+    int y;
+    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = coord[1] - '1';
+    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    } else {
+        printf("Invalid coordinates");
+        return;
+    }
+
+    // NOW WE HAVE TO DO THE GIRD PART
+    
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
