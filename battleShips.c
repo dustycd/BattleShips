@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define SIZE 10
@@ -261,6 +262,62 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], 
     *torpedo_used = 1; // Mark torpedo as used
 }
 
+/*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
+void placeShip(char grid[SIZE][SIZE] , Ship *ship, char shipChar){
+    char coord[3],orientation;
+    int valid = 0;
+
+    while(!valid){
+        printf("Enter starting coordinates for %s (ex: A3) :", ship->name);
+        scanf("%s\n",coord);
+        printf("Enter orientation (h for horizontal , v for vertical):");
+        scanf("%c", &orientation);
+
+        int x = coord[0] - 'A';
+        int y = coord[1] - '1';
+
+        if(isValidShipPlacement(grid , x , y , ship->size , orientation) == 2){
+            if(orientation == 'h'){
+                for(int i = 0 ; i < ship->size; i++){
+                    grid[x][y + i] = shipChar;
+                }
+            }else if (orientation == 'v')
+            {
+                for(int i = 0 ; i < ship->size ; i++){
+                    grid[x + i][y] = shipChar;
+                }
+            }
+            valid = 1;
+        }else if (isValidShipPlacement(grid , x , y , ship->size , orientation) == 1)
+        {
+            printf("Invalid placement,Ships overlap! Try again.\n")
+        }else if (isValidShipPlacement(grid , x , y , ship->size , orientation) == 0)
+        {
+            printf("Invalid placement,Ships exceed grid area! Try again.\n");
+        }else{
+            printf("Invalid placement! Try again.\n");
+        }
+    }
+}
+/*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
+if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
+int isValidShipPlacement(char [SIZE][SIZE], int x, int y, int shipSize, char orientation){
+    if(orientation == 'h'){
+        if(y + shipSize > SIZE) return 0;
+        for (int i = 0 ; i < shipSize ; i++)
+        {
+            if(grid[x][y + i] != '~') return 1;
+        }
+    }else if (orientation == 'v'){
+        if(x + shipSize > SIZE) return 0;
+        for(int i = 0 ; i < shipSize ; i++){
+            if(grid[x + i][y] != '~') return 1;
+        }
+    }
+    return 2;
+    
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
@@ -308,6 +365,7 @@ int main() {
 
     int difficulty; 
     char player1[10], player2[10];
+    char ftp[10], stp[10]; /*ftp = first to play and stp = second to play*/
 
     srand(time(0));
 
@@ -317,17 +375,22 @@ int main() {
     printf("Choose difficulty level (0 for Easy, 1 for Hard): ");
     scanf("%d", &difficulty);
 
-    printf("Enter name for Player 1: ");
+   printf("Enter name for Player 1: ");
     scanf("%s", player1);
     printf("Enter name for Player 2: ");
     scanf("%s", player2);
 
     int firstPlayer = rand() % 2; 
-    printf("%s will go first!\n", firstPlayer == 0 ? player1 : player2);
+    if (firstPlayer == 0) {
+        strcpy(ftp, player1);
+        strcpy(stp, player2);
+    } else {
+        strcpy(ftp, player2);
+        strcpy(stp, player1);
+    }
 
-    /*while loop where the first player has to put his ships when hes done the second player*/
-
-
+    printf("%s will place his ships first\n", ftp);
+    
 
     /*attack phase*/
     while (/*both still have ships*/)
