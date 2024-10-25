@@ -73,75 +73,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     } else {
         printf("Invalid coordinates");
         return;
-    }
-
-    if (mode == 0) { // easy mode
-        if(oppGrid[x][y] == 'S') { //submarine
-            oppGrid[x][y] = 'x';
-            Submarine->hits++;
-            printf("Hit!");
-        }
-         else if(oppGrid[x][y] == 'C') { //carrier
-            oppGrid[x][y] = 'x';
-            Carrier->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[x][y] == 'D') { // destroyer
-            oppGrid[x][y] = 'x';
-            Destroyer->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[x][y] == 'B') { // battleship
-            oppGrid[x][y] = 'x';
-            Battleship->hits++;
-            printf("Hit!");
-        }
-        else { // else missed
-            oppGrid[x][y] = 'o';
-            printf("Miss!");
-        }
-    } else { // hard mode
-        if(oppGrid[x][y] == 'S') { //submarine
-            oppGrid[x][y] = 'x';
-            Submarine->hits++;
-            printf("Hit!");
-        }
-         else if(oppGrid[x][y] == 'C') { //carrier
-            oppGrid[x][y] = 'x';
-            Carrier->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[x][y] == 'D') { // destroyer
-            oppGrid[x][y] = 'x';
-            Destroyer->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[x][y] == 'B') { // battleship
-            oppGrid[x][y] = 'x';
-            Battleship->hits++;
-            printf("Hit!");
-        }
-        else { // else missed
-            printf("Miss!");
-        }
-    }
-
-}
-
-void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) {
-    char coord[3];
-    printf("Enter coordinates: ");
-    scanf("%s", coord);
-    
-    int x = coord[0] - 'A';
-    int y;
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
-    } else {
-        printf("Invalid coordinates");
-        return;
     } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
 
         if(oppGrid[x][y] == 'S') { //submarine
@@ -171,12 +102,11 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         else {
             printf("Miss!");
         }
-    
-
+        
 }
 
 // check if this move is playable in main (playable when opponent sinks a ship)
-void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) {
+void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) { // NEEDS TESTING 
     char coord[3];
     printf("Enter coordinates: ");
     scanf("%s", coord);
