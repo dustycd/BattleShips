@@ -128,6 +128,103 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
 
 }
 
+void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) {
+    char coord[3];
+    printf("Enter coordinates: ");
+    scanf("%s", coord);
+    
+    int x = coord[0] - 'A';
+    int y;
+    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = coord[1] - '1';
+    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    } else {
+        printf("Invalid coordinates");
+        return;
+    } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
+
+        if(oppGrid[x][y] == 'S') { //submarine
+            oppGrid[x][y] = '*';
+            Submarine->hits++;
+            printf("Hit!");
+        }
+         else if(oppGrid[x][y] == 'C') { //carrier
+            oppGrid[x][y] = '*';
+            Carrier->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'D') { // destroyer
+            oppGrid[x][y] = '*';
+            Destroyer->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'B') { // battleship
+            oppGrid[x][y] = '*';
+            Battleship->hits++;
+            printf("Hit!");
+        }
+        else if (mode == 0) { // else missed
+            oppGrid[x][y] = 'o';
+            printf("Miss!");
+        }
+        else {
+            printf("Miss!");
+        }
+    
+
+}
+
+// check if this move is playable in main (playable when opponent sinks a ship)
+void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) {
+    char coord[3];
+    printf("Enter coordinates: ");
+    scanf("%s", coord);
+    
+    int x = coord[0] - 'A';
+    int y;
+    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = coord[1] - '1';
+    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    } else {
+        printf("Invalid coordinates");
+        return;
+    }
+
+    for(int i = 0; i < x; i++) {
+        for(int j = 0; j < y; j++) {
+            if(oppGrid[i][j] == 'S') { //submarine
+            oppGrid[i][j] = '*';
+            Submarine->hits++;
+            printf("Hit!");
+        }
+         else if(oppGrid[i][j] == 'C') { //carrier
+            oppGrid[i][j] = '*';
+            Carrier->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[i][j] == 'D') { // destroyer
+            oppGrid[i][j] = '*';
+            Destroyer->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[i][j] == 'B') { // battleship
+            oppGrid[i][j] = '*';
+            Battleship->hits++;
+            printf("Hit!");
+        }
+        else if(mode == 0){ // else missed easy
+            oppGrid[i][j] = 'o';
+            printf("Miss!");
+        }
+        else {
+            printf("Miss!");
+        }
+        }
+    }
+}
+
 void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes) {
     if (*used_smokes >= allowed_smokes) {
         printf("No smoke screens left. You lose your turn.\n");
