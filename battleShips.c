@@ -128,6 +128,112 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
 
 }
 
+void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes) {
+    if (*used_smokes >= allowed_smokes) {
+        printf("No smoke screens left. You lose your turn.\n");
+        return;
+    }
+
+    char coord[3];
+    printf("Enter top-left coordinate for smoke screen (e.g., B3): ");
+    scanf("%s", coord);
+
+    int x = coord[0] - 'A';
+    int y = atoi(&coord[1]) - 1;
+
+    // Validate coordinates
+    if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) {
+        printf("Invalid coordinates for smoke screen.\n");
+        return;
+    }
+
+    // Apply smoke screen to a 2x2 area
+    for (int i = x; i < x + 2; i++) {
+        for (int j = y; j < y + 2; j++) {
+            smokeGrid[i][j] = 1; // Mark cell as smoked
+        }
+    }
+
+    // Clear screen to preserve secrecy
+    #ifdef _WIN32
+        system("cls"); // For Windows
+    #else
+        system("clear"); // For Unix/Linux
+    #endif
+
+    (*used_smokes)++;
+}
+
+void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], int numShips, int *torpedo_used) {
+    if (*torpedo_used) {
+        printf("Torpedo has already been used. You lose your turn.\n");
+        return;
+    }
+
+    char input[3];
+    printf("Enter row number (1-10) or column letter (A-J) for torpedo attack: ");
+    scanf("%s", input);
+
+    int hit = 0;
+
+    if (input[0] >= 'A' && input[0] <= 'J') {
+        // Column attack
+        int x = input[0] - 'A';
+        for (int y = 0; y < SIZE; y++) {
+            if (smokeGrid[x][y] == 1) continue; // Skip smoked cells
+
+            char cell = oppGrid[x][y];
+            for (int i = 0; i < numShips; i++) {
+                if (cell == ships[i].name[0]) {
+                    oppGrid[x][y] = 'X';
+                    ships[i].hits++;
+                    printf("Hit at %c%d!\n", x + 'A', y + 1);
+
+                    // Check if ship is sunk
+                    if (ships[i].hits == ships[i].size) {
+                        printf("You sunk the %s!\n", ships[i].name);
+                    }
+                    hit = 1;
+                    break;
+                }
+            }
+        }
+    } else {
+        int y = atoi(input) - 1;
+        if (y >= 0 && y < SIZE) {
+            // Row attack
+            for (int x = 0; x < SIZE; x++) {
+                if (smokeGrid[x][y] == 1) continue; // Skip smoked cells
+
+                char cell = oppGrid[x][y];
+                for (int i = 0; i < numShips; i++) {
+                    if (cell == ships[i].name[0]) {
+                        oppGrid[x][y] = 'X';
+                        ships[i].hits++;
+                        printf("Hit at %c%d!\n", x + 'A', y + 1);
+
+                        // Check if ship is sunk
+                        if (ships[i].hits == ships[i].size) {
+                            printf("You sunk the %s!\n", ships[i].name);
+                        }
+                        hit = 1;
+                        break;
+                    }
+                }
+            }
+        } else {
+            printf("Invalid input.\n");
+            return;
+        }
+    }
+
+    if (!hit) {
+        printf("Torpedo missed!\n");
+    }
+
+    *torpedo_used = 1; // Mark torpedo as used
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
