@@ -258,6 +258,15 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier,
     *torpedo_used = 1; // Mark torpedo as used
 }
 
+/*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
+int convertCoordinatesX(char coord[]){
+    return = coord[0] - 'A';
+}
+int convertCoordinatesY(char coord[]){
+    return = coord[1] - '1';
+}
+
+
 /*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
 void placeShip(char grid[SIZE][SIZE] , Ship ship){
     char coord[3],orientation;
@@ -269,8 +278,8 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
         printf("Enter orientation (h for horizontal , v for vertical):");
         scanf("%c", &orientation);
 
-        int x = coord[0] - 'A';
-        int y = coord[1] - '1';
+        int x = convertCoordinatesX(coord);
+        int y = convertCoordinatesY(coord);
 
         if(isValidShipPlacement(grid , x , y , ship.size , orientation) == 2){
             if(orientation == 'h'){
@@ -404,7 +413,33 @@ int main() {
     }
 
     printf("%s will place his ships first\n", ftp);
-    
+
+    if(firstPlayer == 0){
+        placeShip(GridOne, P1Carrier);
+        placeShip(GridOne, P1Battleship);
+        placeShip(GridOne, P1Destroyer);
+        placeShip(GridOne, P1Submarine);
+
+        printf("now its %s's turn to place his ships\n", stp);
+
+        placeShip(GridTwo, P2Carrier);
+        placeShip(GridTwo, P2Battleship);
+        placeShip(GridTwo, P2Destroyer);
+        placeShip(GridTwo, P2Submarine);
+    }else{
+        placeShip(GridTwo, P2Carrier);
+        placeShip(GridTwo, P2Battleship);
+        placeShip(GridTwo, P2Destroyer);
+        placeShip(GridTwo, P2Submarine);
+
+        printf("now its %s's turn to place his ships\n", stp);
+
+        placeShip(GridOne, P1Carrier);
+        placeShip(GridOne, P1Battleship);
+        placeShip(GridOne, P1Destroyer);
+        placeShip(GridOne, P1Submarine);
+    }
+
 
     /*attack phase*/
     while (/*both still have ships*/)
@@ -420,7 +455,6 @@ int main() {
             break;
         }
     }
-    
 
 
     return 0;
