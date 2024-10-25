@@ -59,7 +59,7 @@ int If_sunk_(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, 
     }
 }
 
-void fire(char oppGrid[SIZE][SIZE], int mode) {
+void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode) {
     char coord[3];
     printf("Enter coordinates: ");
     scanf("%s", coord);
@@ -75,8 +75,57 @@ void fire(char oppGrid[SIZE][SIZE], int mode) {
         return;
     }
 
-    // NOW WE HAVE TO DO THE GIRD PART
-    
+    if (mode == 0) { // easy mode
+        if(oppGrid[x][y] == 'S') { //submarine
+            oppGrid[x][y] = 'x';
+            Submarine->hits++;
+            printf("Hit!");
+        }
+         else if(oppGrid[x][y] == 'C') { //carrier
+            oppGrid[x][y] = 'x';
+            Carrier->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'D') { // destroyer
+            oppGrid[x][y] = 'x';
+            Destroyer->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'B') { // battleship
+            oppGrid[x][y] = 'x';
+            Battleship->hits++;
+            printf("Hit!");
+        }
+        else { // else missed
+            oppGrid[x][y] = 'o';
+            printf("Miss!");
+        }
+    } else { // hard mode
+        if(oppGrid[x][y] == 'S') { //submarine
+            oppGrid[x][y] = 'x';
+            Submarine->hits++;
+            printf("Hit!");
+        }
+         else if(oppGrid[x][y] == 'C') { //carrier
+            oppGrid[x][y] = 'x';
+            Carrier->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'D') { // destroyer
+            oppGrid[x][y] = 'x';
+            Destroyer->hits++;
+            printf("Hit!");
+        }
+        else if(oppGrid[x][y] == 'B') { // battleship
+            oppGrid[x][y] = 'x';
+            Battleship->hits++;
+            printf("Hit!");
+        }
+        else { // else missed
+            printf("Miss!");
+        }
+    }
+
 }
 
 int main() {
