@@ -31,7 +31,7 @@ void displayGrid(char grid[SIZE][SIZE]) {
     }
 }
 
-int If_sunk_(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int * Ships)
+int If_sunk(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int * Ships)
 {
     if(Carrier->size == Carrier->hits)
     {
@@ -134,46 +134,14 @@ int main() {
     int rows = SIZE;
     int columns = SIZE;
     int** GridOne = (int**)malloc(rows * sizeof(int*));
-    Ship P1Carrier= {
-        .name = "Carrier",
-        .size = 5,
-        .hits = 0,
-    };     
-    Ship P1Battleship= {
-        .name = "Battleship",
-        .size = 4,
-        .hits = 0,
-    };       
-    Ship P1Destroyer= {
-        .name = "Destroyer",
-        .size = 3,
-        .hits = 0,
-    };
-    Ship P1Submarine= {
-        .name = "Submarine",
-        .size = 2,
-        .hits = 0,
-    };
-    Ship P2Carrier= {
-        .name = "Carrier",
-        .size = 5,
-        .hits = 0,
-    };     
-    Ship P2Battleship= {
-        .name = "Battleship",
-        .size = 4,
-        .hits = 0,
-    };       
-    Ship P2Destroyer= {
-        .name = "Destroyer",
-        .size = 3,
-        .hits = 0,
-    };
-    Ship P2Submarine= {
-        .name = "Submarine",
-        .size = 2,
-        .hits = 0,
-    };
+    Ship P1Carrier= {"Carrier", 5, 0};     
+    Ship P1Battleship= {"Battleship", 4, 0};       
+    Ship P1Destroyer= {"Destroyer", 3, 0};
+    Ship P1Submarine= {"Submarine", 2, 0};
+    Ship P2Carrier= {"Carrier", 5, 0};     
+    Ship P2Battleship= {"Battleship", 4, 0};       
+    Ship P2Destroyer= {"Destroyer", 3, 0};
+    Ship P2Submarine= {"Submarine", 2, 0};
     if(GridOne == NULL)
     {
         printf("Allocation for rows in grid1 has failed!");
@@ -205,38 +173,6 @@ int main() {
         }
     }
 
-    int** Hiddenp1 = (int**)malloc(rows * sizeof(int*));
-    if(Hiddenp1 == NULL)
-    {
-        printf("Allocation for rows in Hiddenp1 has failed!");
-        return -1;
-    }
-    for(int i= 0; i< rows; i++)
-    {
-        GridOne[i]= (int*)malloc(columns *sizeof(int));
-        if(GridOne[i] == NULL)
-        {
-            printf("Allocation for columns in Hiddenp1 has failed!");
-            return -1;
-        }
-    }
-
-    int** Hiddenp2 = (int**)malloc(rows * sizeof(int*));
-    if(Hiddenp2 == NULL)
-    {
-        printf("Allocation for rows in Hiddenp2 has failed!");
-        return -1;
-    }
-    for(int i= 0; i< rows; i++)
-    {
-        GridOne[i]= (int*)malloc(columns *sizeof(int));
-        if(GridOne[i] == NULL)
-        {
-            printf("Allocation for columns in Hiddenp2 has failed!");
-            return -1;
-        }
-    }
-
     int difficulty; 
     char player1[10], player2[10];
 
@@ -244,8 +180,6 @@ int main() {
 
     initializeGrid(GridOne);
     initializeGrid(GridTwo);
-    initializeGrid(Hiddenp1);
-    initializeGrid(Hiddenp2);
 
     printf("Choose difficulty level (0 for Easy, 1 for Hard): ");
     scanf("%d", &difficulty);
