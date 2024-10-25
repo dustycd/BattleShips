@@ -128,6 +128,10 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
 
 }
 
+void Artillery() {
+    
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
