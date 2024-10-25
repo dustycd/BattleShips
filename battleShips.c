@@ -10,6 +10,7 @@ typedef struct
     char name[20];
     int size;
     int hits;
+    char letter;
 } Ship;
 
 
@@ -32,24 +33,9 @@ void displayGrid(char grid[SIZE][SIZE]) {
     }
 }
 
-int If_sunk(Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int * Ships)
+int If_sunk(Ship Ship, int * Ships)
 {
-    if(Carrier->size == Carrier->hits)
-    {
-        Ships--;
-        return 1;
-    }
-    else if(Battleship->size == Battleship->hits)
-    {
-        Ships--;
-        return 1;
-    }
-    else if(Destroyer->size == Destroyer->hits)
-    {
-        Ships--;
-        return 1;
-    }
-    else if(Submarine->size == Submarine->hits)
+    if(Ship.size == Ship.hits)
     {
         Ships--;
         return 1;
@@ -192,7 +178,7 @@ void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes
     (*used_smokes)++;
 }
 
-void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], int numShips, int *torpedo_used) {
+void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int *torpedo_used, int numShips) {
     if (*torpedo_used) {
         printf("Torpedo has already been used. You lose your turn.\n");
         return;
@@ -208,22 +194,27 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], 
         // Column attack
         int x = input[0] - 'A';
         for (int y = 0; y < SIZE; y++) {
-            if (smokeGrid[x][y] == 1) continue; // Skip smoked cells
+            if (smokeGrid[y][x] == 1) continue; // Skip smoked cells
 
-            char cell = oppGrid[x][y];
-            for (int i = 0; i < numShips; i++) {
-                if (cell == ships[i].name[0]) {
-                    oppGrid[x][y] = 'X';
-                    ships[i].hits++;
-                    printf("Hit at %c%d!\n", x + 'A', y + 1);
+            char cell = oppGrid[y][x];
+            Ship *ship = NULL;
 
-                    // Check if ship is sunk
-                    if (ships[i].hits == ships[i].size) {
-                        printf("You sunk the %s!\n", ships[i].name);
-                    }
-                    hit = 1;
-                    break;
+            // Check if the cell matches any ship
+            if (cell == Carrier->letter) ship = Carrier;
+            else if (cell == Battleship->letter) ship = Battleship;
+            else if (cell == Destroyer->letter) ship = Destroyer;
+            else if (cell == Submarine->letter) ship = Submarine;
+
+            if (ship) {
+                oppGrid[y][x] = 'X';
+                ship->hits++;
+                printf("Hit at %c%d!\n", x + 'A', y + 1);
+
+                // Check if the ship is sunk
+                if (If_sunk(*ship, numShips)) {
+                    printf("You sunk the %s!\n", ship->name);
                 }
+                hit = 1;
             }
         }
     } else {
@@ -231,22 +222,27 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], 
         if (y >= 0 && y < SIZE) {
             // Row attack
             for (int x = 0; x < SIZE; x++) {
-                if (smokeGrid[x][y] == 1) continue; // Skip smoked cells
+                if (smokeGrid[y][x] == 1) continue; // Skip smoked cells
 
-                char cell = oppGrid[x][y];
-                for (int i = 0; i < numShips; i++) {
-                    if (cell == ships[i].name[0]) {
-                        oppGrid[x][y] = 'X';
-                        ships[i].hits++;
-                        printf("Hit at %c%d!\n", x + 'A', y + 1);
+                char cell = oppGrid[y][x];
+                Ship *ship = NULL;
 
-                        // Check if ship is sunk
-                        if (ships[i].hits == ships[i].size) {
-                            printf("You sunk the %s!\n", ships[i].name);
-                        }
-                        hit = 1;
-                        break;
+                // Check if the cell matches any ship
+                if (cell == Carrier->letter) ship = Carrier;
+                else if (cell == Battleship->letter) ship = Battleship;
+                else if (cell == Destroyer->letter) ship = Destroyer;
+                else if (cell == Submarine->letter) ship = Submarine;
+
+                if (ship) {
+                    oppGrid[y][x] = 'X';
+                    ship->hits++;
+                    printf("Hit at %c%d!\n", x + 'A', y + 1);
+
+                    // Check if the ship is sunk
+                    if (If_sunk(*ship, numShips)) {
+                        printf("You sunk the %s!\n", ship->name);
                     }
+                    hit = 1;
                 }
             }
         } else {
@@ -263,12 +259,12 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship ships[], 
 }
 
 /*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
-void placeShip(char grid[SIZE][SIZE] , Ship *ship, char shipChar){
+void placeShip(char grid[SIZE][SIZE] , Ship ship){
     char coord[3],orientation;
     int valid = 0;
 
     while(!valid){
-        printf("Enter starting coordinates for %s (ex: A3) :", ship->name);
+        printf("Enter starting coordinates for %s (ex: A3) :", ship.name);
         scanf("%s\n",coord);
         printf("Enter orientation (h for horizontal , v for vertical):");
         scanf("%c", &orientation);
@@ -276,22 +272,22 @@ void placeShip(char grid[SIZE][SIZE] , Ship *ship, char shipChar){
         int x = coord[0] - 'A';
         int y = coord[1] - '1';
 
-        if(isValidShipPlacement(grid , x , y , ship->size , orientation) == 2){
+        if(isValidShipPlacement(grid , x , y , ship.size , orientation) == 2){
             if(orientation == 'h'){
-                for(int i = 0 ; i < ship->size; i++){
-                    grid[x][y + i] = shipChar;
+                for(int i = 0 ; i < ship.size; i++){
+                    grid[x][y + i] = ship.letter;
                 }
             }else if (orientation == 'v')
             {
-                for(int i = 0 ; i < ship->size ; i++){
-                    grid[x + i][y] = shipChar;
+                for(int i = 0 ; i < ship.size ; i++){
+                    grid[x + i][y] = ship.letter;
                 }
             }
             valid = 1;
-        }else if (isValidShipPlacement(grid , x , y , ship->size , orientation) == 1)
+        }else if (isValidShipPlacement(grid , x , y , ship.size , orientation) == 1)
         {
-            printf("Invalid placement,Ships overlap! Try again.\n")
-        }else if (isValidShipPlacement(grid , x , y , ship->size , orientation) == 0)
+            printf("Invalid placement,Ships overlap! Try again.\n");
+        }else if (isValidShipPlacement(grid , x , y , ship.size , orientation) == 0)
         {
             printf("Invalid placement,Ships exceed grid area! Try again.\n");
         }else{
@@ -301,7 +297,7 @@ void placeShip(char grid[SIZE][SIZE] , Ship *ship, char shipChar){
 }
 /*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
 if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
-int isValidShipPlacement(char [SIZE][SIZE], int x, int y, int shipSize, char orientation){
+int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
     if(orientation == 'h'){
         if(y + shipSize > SIZE) return 0;
         for (int i = 0 ; i < shipSize ; i++)
@@ -318,20 +314,38 @@ int isValidShipPlacement(char [SIZE][SIZE], int x, int y, int shipSize, char ori
     
 }
 
+void print_hidden_grid(char grid[SIZE][SIZE])
+{
+    for(int i=0; i< SIZE; i++)
+    {
+        for(int j=0; j<SIZE; j++)
+        {
+            if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S')     /*Function to print the hidden grid*/
+            {
+                printf("%c ", '~');
+            }
+            else
+            {
+                printf("%d ", grid[i][j]);
+            }
+        }
+    }
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
     int rows = SIZE;
     int columns = SIZE;
+    Ship P1Carrier= {"Carrier", 5, 0, 'C'};     
+    Ship P1Battleship= {"Battleship", 4, 0,'B'};       
+    Ship P1Destroyer= {"Destroyer", 3, 0,'D'};
+    Ship P1Submarine= {"Submarine", 2, 0,'S'};
+    Ship P2Carrier= {"Carrier", 5, 0,'C'};     
+    Ship P2Battleship= {"Battleship", 4, 0,'B'};       
+    Ship P2Destroyer= {"Destroyer", 3, 0,'D'};
+    Ship P2Submarine= {"Submarine", 2, 0,'S'};
     int** GridOne = (int**)malloc(rows * sizeof(int*));
-    Ship P1Carrier= {"Carrier", 5, 0};     
-    Ship P1Battleship= {"Battleship", 4, 0};       
-    Ship P1Destroyer= {"Destroyer", 3, 0};
-    Ship P1Submarine= {"Submarine", 2, 0};
-    Ship P2Carrier= {"Carrier", 5, 0};     
-    Ship P2Battleship= {"Battleship", 4, 0};       
-    Ship P2Destroyer= {"Destroyer", 3, 0};
-    Ship P2Submarine= {"Submarine", 2, 0};
     if(GridOne == NULL)
     {
         printf("Allocation for rows in grid1 has failed!");
