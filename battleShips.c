@@ -13,6 +13,13 @@ typedef struct
     char letter;
 } Ship;
 
+typedef struct 
+{
+    char name[20];
+    int numShips;
+    int radarSweeps;
+    int AllowedSmokeScreen;
+} Player;
 
 void initializeGrid(char grid[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
@@ -142,6 +149,24 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     }
 }
 
+void Radar_Sweep(char oppGrid[SIZE][SIZE], int x, int y)
+{
+    for(int i=x; i<(x+3); i++)
+    {
+        for(int j=y; j<(y+3); j++)
+        {
+            if(oppGrid[i][j] == 'o' || oppGrid[i][j] == '*' || oppGrid[i][j] == '~')
+            {
+                printf("No enemy ships found");
+            }
+            else
+            {
+                printf("Enemy ships found");
+            }
+        }
+    }
+}
+
 void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes) {
     if (*used_smokes >= allowed_smokes) {
         printf("No smoke screens left. You lose your turn.\n");
@@ -260,10 +285,10 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier,
 
 /*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
 int convertCoordinatesX(char coord[]){
-    return = coord[0] - 'A';
+    return coord[0] - 'A';
 }
 int convertCoordinatesY(char coord[]){
-    return = coord[1] - '1';
+    return coord[1] - '1';
 }
 
 
@@ -402,6 +427,9 @@ int main() {
     scanf("%s", player1);
     printf("Enter name for Player 2: ");
     scanf("%s", player2);
+
+    Player Player1 = {player1, 4, 3, 0};
+    Player Player2 = {player2, 4, 3, 0};
 
     int firstPlayer = rand() % 2; 
     if (firstPlayer == 0) {
