@@ -73,7 +73,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     } else {
         printf("Invalid coordinates");
         return;
-    }
+    } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
 
         if(oppGrid[x][y] == 'S') { //submarine
             oppGrid[x][y] = '*';
