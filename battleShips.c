@@ -19,15 +19,18 @@ typedef struct
     int numShips;
     int radarSweeps;
     int AllowedSmokeScreen;
+    int UsedSmoke;
+    int AllowedArtilery;
+    int AllowedTorpedo;
 } Player;
 
-void initializeGrid(char grid[SIZE][SIZE]) {
+/*void initializeGrid(char grid[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             grid[i][j] = '~'; 
         }
     }
-}
+}*/
 
 void displayGrid(char grid[SIZE][SIZE]) {
     printf("  A B C D E F G H I J\n"); 
@@ -40,11 +43,11 @@ void displayGrid(char grid[SIZE][SIZE]) {
     }
 }
 
-int If_sunk(Ship Ship, int * Ships)
+int If_sunk(Ship Ship, Player * Player)
 {
     if(Ship.size == Ship.hits)
     {
-        Ships--;
+        Player->numShips--;
         return 1;
     }
     else
@@ -149,8 +152,13 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     }
 }
 
-void Radar_Sweep(char oppGrid[SIZE][SIZE], int x, int y)
+int Radar_Sweep(char oppGrid[SIZE][SIZE], int x, int y, Player* Player)
 {
+    if(Player->radarSweeps == 0)
+    {
+        printf("No radar sweeps left. You lose your turn.\n");
+        return 1;
+    }
     for(int i=x; i<(x+3); i++)
     {
         for(int j=y; j<(y+3); j++)
@@ -165,12 +173,14 @@ void Radar_Sweep(char oppGrid[SIZE][SIZE], int x, int y)
             }
         }
     }
+
+    return 0;
 }
 
-void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes) {
-    if (*used_smokes >= allowed_smokes) {
+int SmokeScreen(int smokeGrid[SIZE][SIZE], Player *Player) {
+    if (Player->UsedSmoke >= Player->AllowedSmokeScreen) {
         printf("No smoke screens left. You lose your turn.\n");
-        return;
+        return 1;
     }
 
     char coord[3];
@@ -183,7 +193,7 @@ void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes
     // Validate coordinates
     if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) {
         printf("Invalid coordinates for smoke screen.\n");
-        return;
+        return 1;
     }
 
     // Apply smoke screen to a 2x2 area
@@ -193,20 +203,15 @@ void SmokeScreen(int smokeGrid[SIZE][SIZE], int *used_smokes, int allowed_smokes
         }
     }
 
-    // Clear screen to preserve secrecy
-    #ifdef _WIN32
-        system("cls"); // For Windows
-    #else
-        system("clear"); // For Unix/Linux
-    #endif
+    Player->UsedSmoke++;
 
-    (*used_smokes)++;
+    return 0;
 }
 
-void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int *torpedo_used, int numShips) {
-    if (*torpedo_used) {
+int Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player) {
+    if (Player->AllowedTorpedo == 0) {
         printf("Torpedo has already been used. You lose your turn.\n");
-        return;
+        return 1;
     }
 
     char input[3];
@@ -236,7 +241,7 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier,
                 printf("Hit at %c%d!\n", x + 'A', y + 1);
 
                 // Check if the ship is sunk
-                if (If_sunk(*ship, numShips)) {
+                if (If_sunk(*ship, Player->numShips)) {
                     printf("You sunk the %s!\n", ship->name);
                 }
                 hit = 1;
@@ -259,12 +264,12 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier,
                 else if (cell == Submarine->letter) ship = Submarine;
 
                 if (ship) {
-                    oppGrid[y][x] = 'X';
+                    oppGrid[y][x] = '*';
                     ship->hits++;
                     printf("Hit at %c%d!\n", x + 'A', y + 1);
 
                     // Check if the ship is sunk
-                    if (If_sunk(*ship, numShips)) {
+                    if (If_sunk(*ship, Player ->numShips)) {
                         printf("You sunk the %s!\n", ship->name);
                     }
                     hit = 1;
@@ -272,15 +277,18 @@ void Torpedo(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Ship *Carrier,
             }
         } else {
             printf("Invalid input.\n");
-            return;
+            return 1;
         }
+
     }
 
     if (!hit) {
         printf("Torpedo missed!\n");
     }
 
-    *torpedo_used = 1; // Mark torpedo as used
+    Player->AllowedTorpedo--; // Mark torpedo as used
+
+    return 0;
 }
 
 /*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
@@ -377,7 +385,15 @@ void print_grid(char grid[SIZE][SIZE])
     }
 }
 
-void ShowAvailableMoves(){}//TO DO 
+void ShowAvailableMoves(Player *Player)
+{
+    printf("Available Moves:\n");
+    printf("1. Fire\n");
+    printf("2. Radar\n");
+    printf("3. Smoke\n");
+    printf("4. Artillery\n");
+    printf("5. Torpedo\n");
+}
 int main() {
     int rows = SIZE;
     int columns = SIZE;
@@ -389,37 +405,8 @@ int main() {
     Ship P2Battleship= {"Battleship", 4, 0,'B'};       
     Ship P2Destroyer= {"Destroyer", 3, 0,'D'};
     Ship P2Submarine= {"Submarine", 2, 0,'S'};
-    int** GridOne = (int**)malloc(rows * sizeof(int*));
-    if(GridOne == NULL)
-    {
-        printf("Allocation for rows in grid1 has failed!");
-        return -1;
-    }
-    for(int i= 0; i< rows; i++)
-    {
-        GridOne[i]= (int*)malloc(columns *sizeof(int));
-        if(GridOne[i] == NULL)
-        {
-            printf("Allocation for columns in grid1 has failed!");
-            return -1;
-        }
-    }
-
-    int** GridTwo = (int**)malloc(rows * sizeof(int*));
-    if(GridTwo == NULL)
-    {
-        printf("Allocation for rows in grid2 has failed!");
-        return -1;
-    }
-    for(int i= 0; i< rows; i++)
-    {
-        GridTwo[i]= (int*)malloc(columns *sizeof(int));
-        if(GridTwo[i] == NULL)
-        {
-            printf("Allocation for columns in grid2 has failed!");
-            return -1;
-        }
-    }
+    int GridOne[SIZE][SIZE] = {'~'};
+    int GridTwo[SIZE][SIZE] = {'~'};
 
     int difficulty; 
     char player1[10], player2[10];
@@ -438,8 +425,8 @@ int main() {
     printf("Enter name for Player 2: ");
     scanf("%s", player2);
 
-    Player Player1 = {player1, 4, 3, 0};
-    Player Player2 = {player2, 4, 3, 0};
+    Player Player1 = {player1, 4, 3, 0, 0, 0, 0, 0};
+    Player Player2 = {player2, 4, 3, 0, 0, 0, 0, 0};
 
     int firstPlayer = rand() % 2; 
     if (firstPlayer == 0) {
