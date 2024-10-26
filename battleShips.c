@@ -366,6 +366,17 @@ void print_hidden_grid(char grid[SIZE][SIZE])
     }
 }
 
+void print_grid(char grid[SIZE][SIZE])
+{
+    for(int i=0; i< SIZE; i++)
+    {
+        for(int j=0; j<SIZE; j++)
+        {
+            printf("%d ", grid[i][j]);
+        }
+    }
+}
+
 int main() {
     int p1_ships = 4;
     int p2_ships = 4;
