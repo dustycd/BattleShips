@@ -377,9 +377,8 @@ void print_grid(char grid[SIZE][SIZE])
     }
 }
 
+void ShowAvailableMoves(){}//TO DO 
 int main() {
-    int p1_ships = 4;
-    int p2_ships = 4;
     int rows = SIZE;
     int columns = SIZE;
     Ship P1Carrier= {"Carrier", 5, 0, 'C'};     
@@ -455,46 +454,55 @@ int main() {
 
     if(firstPlayer == 0){
         placeShip(GridOne, P1Carrier);
+        print_grid(GridOne);
         placeShip(GridOne, P1Battleship);
+        print_grid(GridOne);
         placeShip(GridOne, P1Destroyer);
+        print_grid(GridOne);
         placeShip(GridOne, P1Submarine);
+        print_grid(GridOne);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridTwo, P2Carrier);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Battleship);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Destroyer);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Submarine);
+        print_grid(GridTwo);
     }else{
         placeShip(GridTwo, P2Carrier);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Battleship);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Destroyer);
+        print_grid(GridTwo);
         placeShip(GridTwo, P2Submarine);
+        print_grid(GridTwo);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridOne, P1Carrier);
+        print_grid(GridOne);
         placeShip(GridOne, P1Battleship);
+        print_grid(GridOne);
         placeShip(GridOne, P1Destroyer);
+        print_grid(GridOne);
         placeShip(GridOne, P1Submarine);
+        print_grid(GridOne);
     }
 
+    int ifwon = 0;
+    while (!ifwon){
+        printf("its %s's turn to play!",ftp);
+        if(firstPlayer == 0){
+            print_hidden_grid(GridOne);//TO DO
 
-    /*attack phase*/
-    while (/*both still have ships*/)
-    {
-        fires
-        switch (/*turn to play*/)
-        {
-        case /* constant-expression */:
-            /* code */
-            break;
-        
-        default:
-            break;
         }
+
     }
-
-
+    
     return 0;
 }
