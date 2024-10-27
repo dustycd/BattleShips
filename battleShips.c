@@ -99,12 +99,39 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         
 }
 
+
+void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode, int x, int y) {
+    if(oppGrid[x][y] == 'S') { //submarine
+        oppGrid[x][y] = '*';
+        Submarine->hits++;
+        printf("Hit!");
+    } else if(oppGrid[x][y] == 'C') { //carrier
+        oppGrid[x][y] = '*';
+        Carrier->hits++;
+        printf("Hit!");
+    } else if(oppGrid[x][y] == 'D') { // destroyer
+        oppGrid[x][y] = '*';
+        Destroyer->hits++;
+        printf("Hit!");
+    } else if(oppGrid[x][y] == 'B') { // battleship
+        oppGrid[x][y] = '*';
+        Battleship->hits++;
+        printf("Hit!");
+    } else if(mode == 0){ // else missed easy
+        oppGrid[x][y] = 'o';
+        printf("Miss!");
+    } else {
+        printf("Miss!");
+    }
+}
+
 // check if this move is playable in main (playable when opponent sinks a ship)
 void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode , char coord[]) { // NEEDS TESTING 
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
     eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
     nehke w nshouf kif badna nzabeta*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM
+    // fixed for now
     
     int x = convertCoordinatesX(coord[0]);
     int y;
@@ -118,35 +145,46 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
         return;
     }
 
-    for(int i = 0; i < x; i++) {
-        for(int j = 0; j < y; j++) {
-            if(oppGrid[i][j] == 'S') { //submarine
-            oppGrid[i][j] = '*';
-            Submarine->hits++;
-            printf("Hit!");
-        }
-         else if(oppGrid[i][j] == 'C') { //carrier
-            oppGrid[i][j] = '*';
-            Carrier->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[i][j] == 'D') { // destroyer
-            oppGrid[i][j] = '*';
-            Destroyer->hits++;
-            printf("Hit!");
-        }
-        else if(oppGrid[i][j] == 'B') { // battleship
-            oppGrid[i][j] = '*';
-            Battleship->hits++;
-            printf("Hit!");
-        }
-        else if(mode == 0){ // else missed easy
-            oppGrid[i][j] = 'o';
-            printf("Miss!");
-        }
-        else {
-            printf("Miss!");
-        }
+    if(y == 10) {
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1);
+    } else if(x == 10) {
+        // remove up and down
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x+1, y);
+    } else if(x == 10 && y == 10) {
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
+    } else {
+        for(int i = 0; i < x; i++) { // this part might be wrong. NEEDS TESTING
+            for(int j = 0; j < y; j++) {
+                if(oppGrid[i][j] == 'S') { //submarine
+                oppGrid[i][j] = '*';
+                Submarine->hits++;
+                printf("Hit!");
+            }
+            else if(oppGrid[i][j] == 'C') { //carrier
+                oppGrid[i][j] = '*';
+                Carrier->hits++;
+                printf("Hit!");
+            }
+            else if(oppGrid[i][j] == 'D') { // destroyer
+                oppGrid[i][j] = '*';
+                Destroyer->hits++;
+                printf("Hit!");
+            }
+            else if(oppGrid[i][j] == 'B') { // battleship
+                oppGrid[i][j] = '*';
+                Battleship->hits++;
+                printf("Hit!");
+            }
+            else if(mode == 0){ // else missed easy
+                oppGrid[i][j] = 'o';
+                printf("Miss!");
+            }
+            else {
+                printf("Miss!");
+            }
+            }
         }
     }
 }
