@@ -361,8 +361,14 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
         printf("Enter orientation (h for horizontal , v for vertical):");
         scanf("%c", &orientation);
 
-        int x = convertCoordinatesX(coord);
-        int y = convertCoordinatesY(coord);
+        int x = convertCoordinatesX(coord[0]);
+        int y;
+        if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {
+            y = convertCoordinatesY(coord[1]);
+            } 
+            else if(coord[1] == '1' && coord[2] == '0' ) {// A10
+            y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+            }
 
         if(isValidShipPlacement(grid , x , y , ship.size , orientation) == 2){
             if(orientation == 'h'){
