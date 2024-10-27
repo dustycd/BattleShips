@@ -60,12 +60,12 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     
     int x = convertCoordinatesX(coord[0]);
     int y;
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+    if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = convertCoordinatesY(coord[1]);
+    } else if(coord[1] == '1' && coord[2] == '0' ) {// A10
         y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
-        printf("Invalid coordinates");
+        printf("Invalid coordinates.  You lose your turn.");
         return;
     } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
 
@@ -114,7 +114,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
         y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
-        printf("Invalid coordinates");
+        printf("Invalid coordinates.  You lose your turn.");
         return;
     }
 
@@ -312,6 +312,7 @@ int convertCoordinatesY(char coord[]){
 
 
 /*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
+/*attention to coordinates same error with placement in case it was 10 or above and also here x and y are the same*/
 void placeShip(char grid[SIZE][SIZE] , Ship ship){
     char coord[3],orientation;
     int valid = 0;
@@ -350,6 +351,11 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
 }
 /*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
 if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
+
+/*we have problem with reading coordiantes in case the user coordinates was 10 or above the code will read it as 1 and wont read the second 
+number in case it was 0 so what we have to do is create a condition where if in coord[2] it wasnt empty then it will take coord[1] and 
+modify it to add coord[2] to it so if our example was A10 coord[0] will be A , coord[1] will be 1 and coord[2] will be 0 then we will modify
+it so coord[1] will be 10*/
 int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
     if(orientation == 'h'){
         if(y + shipSize > SIZE) return 0;
