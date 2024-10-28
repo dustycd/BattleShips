@@ -202,7 +202,7 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
         printf("Invalid coordinates.  You lose your turn.");
-        return;
+        return 0;
     }
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
@@ -573,25 +573,25 @@ int main() {
                     coordi[0]=command[5];
                     coordi[1]=command[6];
                     coordi[2]=command[7];
-                    fire(GridTwo , *P2Carrier , *P2Battleship , *P2Destroyer , *P2Submarine , difficulty , coordi);
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
                     coordi[0]=command[6];
                     coordi[1]=command[7];
                     coordi[2]=command[8];
-                    Radar_Sweep(GridTwo , coordi , Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0]=command[6];
                     coordi[1]= command[7];
                     coordi[2]=command[8];
-                    SmokeScreen(GridOne , Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0]=command[10];
                     coordi[1]=command[11];
                     coordi[2]=command[12];
-                    artillery(GridTwo , *P2Carrier , *P2Battleship , *P2Destroyer , *P2Submarine , difficulty , coordi);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0]=command[8];
@@ -620,25 +620,25 @@ int main() {
                     coordi[0]=command[5];
                     coordi[1]=command[6];
                     coordi[2]=command[7];
-                    fire( GridOne , *P1Carrier , *P1Battleship , *P1Destroyer , *P1Submarine , difficulty , coordi);
+                    fire( GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'R':
                     coordi[0]=command[6];
                     coordi[1]=command[7];
                     coordi[2]=command[8];
-                    Radar_Sweep(GridOne , coordi , Player2);
+                    Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
                     coordi[0]=command[6];
                     coordi[1]= command[7];
                     coordi[2]=command[8];
-                    SmokeScreen(GridTwo , Player2 ,coordi);
+                    SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
                     coordi[0]=command[10];
                     coordi[1]=command[11];
                     coordi[2]=command[12];
-                    artillery(GridOne , *P1Carrier , *P1Battleship , *P1Destroyer , *P1Submarine , difficulty , coordi);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0]=command[8];
@@ -665,25 +665,25 @@ int main() {
                     coordi[0]=command[5];
                     coordi[1]=command[6];
                     coordi[2]=command[7];
-                    fire(GridOne , *P1Carrier , *P1Battleship , *P1Destroyer , *P1Submarine , difficulty , coordi);
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'R':
                     coordi[0]=command[6];
                     coordi[1]=command[7];
                     coordi[2]=command[8];
-                    Radar_Sweep(GridOne , coordi , Player2);
+                    Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
                     coordi[0]=command[6];
                     coordi[1]= command[7];
                     coordi[2]=command[8];
-                    SmokeScreen(GridTwo , Player2 ,coordi);
+                    SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
                     coordi[0]=command[10];
                     coordi[1]=command[11];
                     coordi[2]=command[12];
-                    artillery(GridOne , *P1Carrier , *P1Battleship , *P1Destroyer , *P1Submarine , difficulty , coordi);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0]=command[8];
@@ -712,25 +712,25 @@ int main() {
                     coordi[0]=command[5];
                     coordi[1]=command[6];
                     coordi[2]=command[7];
-                    fire( GridTwo , *P2Carrier , *P2Battleship , *P2Destroyer , *P2Submarine , difficulty , coordi);
+                    fire( GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
                     coordi[0]=command[6];
                     coordi[1]=command[7];
                     coordi[2]=command[8];
-                    Radar_Sweep(GridTwo , coordi , Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0]=command[6];
                     coordi[1]= command[7];
                     coordi[2]=command[8];
-                    SmokeScreen(GridOne , Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0]=command[10];
                     coordi[1]=command[11];
                     coordi[2]=command[12];
-                    artillery(GridTwo , *P2Carrier , *P2Battleship , *P2Destroyer , *P2Submarine , difficulty , coordi);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0]=command[8];
