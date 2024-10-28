@@ -146,18 +146,18 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
         return;
     }
 
-    if(y == 10) {
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1);
-    } else if(x == 10) {
-        // remove up and down
+    if(y == 10 && x < 10) {
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x+1, y);
+    } else if(x == 10 && y < 10) {
+        // remove up and down
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1);
     } else if(x == 10 && y == 10) {
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
     } else {
-        for(int i = 0; i < x; i++) { // this part might be wrong. NEEDS TESTING
-            for(int j = 0; j < y; j++) {
+        for(int i = x; i < x+2; i++) { // this part might be wrong. NEEDS TESTING
+            for(int j = y; j < y+2; j++) {
                 if(oppGrid[i][j] == 'S') { //submarine
                 oppGrid[i][j] = '*';
                 Submarine->hits++;
@@ -194,7 +194,16 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
 {
 
     int x = convertCoordinatesX(coord[0]);
-    int y =convertCoordinatesY(coord[1]);
+    int y;
+
+    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = coord[1] - '1';
+    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    } else {
+        printf("Invalid coordinates.  You lose your turn.");
+        return;
+    }
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
     eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
@@ -229,7 +238,16 @@ int SmokeScreen(int smokeGrid[SIZE][SIZE], Player *Player, char coord[]) {
     }
 
     int x = convertCoordinatesX(coord);
-    int y = convertCoordinatesY(coord);
+    int y;
+
+    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
+        y = coord[1] - '1';
+    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
+        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    } else {
+        printf("Invalid coordinates.  You lose your turn.");
+        return;
+    }
 
     // Validate coordinates
     if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) {
