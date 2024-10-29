@@ -58,31 +58,61 @@ void displayGrid(char grid[SIZE][SIZE]) {
     }
 }
 
-void print_hidden_grid(char grid[SIZE][SIZE])
+void print_hidden_grid(char grid[SIZE][SIZE], int difficulty)
 {
-    printf("   A B C D E F G H I J\n"); 
-    for(int i=0; i< SIZE; i++)
+    if(difficulty == 0)
     {
-        if(i < 9)
+        printf("   A B C D E F G H I J\n"); 
+        for(int i=0; i< SIZE; i++)
         {
-            printf(" %d ", i + 1);
-        }
-        else
-        {
-            printf("%d ", i + 1);
-        }
-        for(int j=0; j<SIZE; j++)
-        {
-            if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S')     /*Function to print the hidden grid*/
+            if(i < 9)
             {
-                printf("%c ", '~');
+                printf(" %d ", i + 1);
             }
             else
             {
-                printf("%c ", grid[i][j]);
+                printf("%d ", i + 1);
             }
+            for(int j=0; j<SIZE; j++)
+            {
+                if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S')     /*Function to print the hidden grid*/
+                {
+                    printf("%c ", '~');
+                }
+                else
+                {
+                    printf("%c ", grid[i][j]);
+                }
+            }
+            printf("\n");
         }
-        printf("\n");
+    }
+    else
+    {
+        printf("   A B C D E F G H I J\n"); 
+        for(int i=0; i< SIZE; i++)
+        {
+            if(i < 9)
+            {
+                printf(" %d ", i + 1);
+            }
+            else
+            {
+                printf("%d ", i + 1);
+            }
+            for(int j=0; j<SIZE; j++)
+            {
+                if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'o')     /*Function to print the hidden grid*/
+                {
+                    printf("%c ", '~');
+                }
+                else
+                {
+                    printf("%c ", grid[i][j]);
+                }
+            }
+            printf("\n");
+        }
     }
 }
 
@@ -258,20 +288,10 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
 
 int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
 {
-
+    int found =0;
     int x ;
     int y = convertCoordinatesY(coord);
 
-<<<<<<< HEAD
-    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
-        x = convertCoordinatesX(coord);
-    } else if (coord[1] == '1' && coord[2] == '0') { // A10
-        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
-    } else {
-        printf("Invalid coordinates. You lose your turn.");
-        return;
-    } 
-=======
     if (coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') { //"B3"
         y = convertCoordinatesY(coord);
     } else if (coord[1] == '1' && coord[2] == '0') { //"A10"
@@ -280,7 +300,6 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         printf("Invalid coordinates. You lose your turn.\n");
         return 0;
     }
->>>>>>> 470e37e2d2a7152ba8e2ebeef8e00e03f456cd9a
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
     eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
@@ -296,13 +315,18 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         {
             if(oppGrid[i][j] != 'o' && oppGrid[i][j] != '*' && oppGrid[i][j] != '~')
             {
-                printf("Enemy ships found");
-            }
-            else
-            {
-                printf("No Enemy ships found");
+                found =1;
+                break;
             }
         }
+    }
+    if(found == 1)
+    {
+        printf("Enemy Ships Found.");
+    }
+    else
+    {
+        printf("No enemy ships found");
     }
 
     return 0;
@@ -377,6 +401,8 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
                 // Check if the ship is sunk
                 if (If_sunk(*ship, Player)) {
                     printf("You sunk the %s!\n", ship->name);
+                    Player->AllowedSmokeScreen = 1;
+                    Player->AllowedArtilery = 1;
                 }
                 hit = 1;
             } else {
@@ -407,6 +433,8 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
                     // Check if the ship is sunk
                     if (If_sunk(*ship, Player)) {
                         printf("You sunk the %s!\n", ship->name);
+                        Player->AllowedSmokeScreen = 1;
+                        Player->AllowedArtilery = 1;
                     }
                     hit = 1;
                 } else {
