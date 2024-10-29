@@ -331,14 +331,14 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     } 
 
     if(y == 10 && x < 10) {
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x+1, y, Player);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, Player , mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x+1, y);
     } else if(x == 10 && y < 10) {
         // remove up and down
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1, Player);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, Player, mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x, y+1);
     } else if(x == 10 && y == 10) {
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x, y);
     } else {
         for(int i = x; i < x+2; i++) { // this part might be wrong. NEEDS TESTING
             for(int j = y; j < y+2; j++) {
@@ -762,7 +762,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi , &Player1);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -780,12 +780,12 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0] = command[9];
-                    //Torpedo(GridTwo , )
-                    /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
+                    Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    
                 default:
                     break;
                     }
@@ -809,7 +809,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi , &Player2 );
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -827,12 +827,11 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0] = command[9];
-                    //Torpedo(GridTwo , )
-                    /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
+                    Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                 default:
                     break;
                     }
@@ -852,7 +851,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi , &Player2);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -870,12 +869,11 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0] = command[9];
-                    //Torpedo(GridTwo , )
-                    /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
+                    Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                 default:
                     break;
                     }
@@ -916,12 +914,11 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
                     coordi[0] = command[9];
-                    //Torpedo(GridTwo , )
-                    /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
+                    Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                 default:
                     break;
                     }
