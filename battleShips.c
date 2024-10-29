@@ -118,13 +118,13 @@ void print_hidden_grid(char grid[SIZE][SIZE], int difficulty)
 
 
 int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
-    if(orientation == 'h'){
+    if(orientation == 'h' || orientation == 'H'){
         if(y + shipSize > SIZE) return 0;
         for (int i = 0 ; i < shipSize ; i++)
         {
             if(grid[x][y + i] != '~') return 1;
         }
-    }else if (orientation == 'v'){
+    }else if (orientation == 'v' || orientation == 'V'){
         if(x + shipSize > SIZE) return 0;
         for(int i = 0 ; i < shipSize ; i++){
             if(grid[x + i][y] != '~') return 1;
@@ -148,9 +148,6 @@ int If_sunk(Ship Ship, Player * Player)
 }
 
 void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[], Player *Player) {
-    printf("%c\n" ,coord[0]);
-    printf("%c\n", coord[1]);
-    printf("%c\n", coord[2]);
 
     int x ;
     int y =convertCoordinatesY(coord);
@@ -223,6 +220,8 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
                 Player->AllowedSmokeScreen = 0;
                 Player->AllowedArtilery = 0;
             }
+        }else if(oppGrid[x][y] == '*'){
+            printf("This coordinates has already been hit. You loose turn!");
         }
         else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
             oppGrid[x][y] = 'o';
@@ -296,7 +295,12 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
             Player->AllowedSmokeScreen = 0;
             Player->AllowedArtilery = 0;
         }
-    } else if(mode == 0){ // else missed easy
+        
+    }
+    else if(oppGrid[x][y] == '*'){
+            printf("This coordinates has already been hit. You loose turn!");
+    } 
+    else if(mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B'){ // else missed easy
         oppGrid[x][y] = 'o';
         printf("Miss!\n");
         Player->AllowedSmokeScreen = 0;
@@ -610,10 +614,6 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
     int valid = 0;
 
     while(!valid){
-        printf("\033c");    
-        printf("\033[2J");  
-        printf("\033[H");  
-        fflush(stdout);
         displayGrid(grid);
         printf("Enter starting coordinates for %s (ex: A3) :", ship.name);
         scanf("%s",coord);
@@ -631,12 +631,12 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
             }
 
         if(isValidShipPlacement(grid , x , y , ship.size , orientation) == 2){
-            if(orientation == 'h'){
+            if(orientation == 'h' || orientation == 'H'){
                 for(int i = 0 ; i < ship.size; i++){
                     grid[x][y + i] = ship.letter;
                 }
                 //displayGrid(grid);
-            }else if (orientation == 'v')
+            }else if (orientation == 'v' || orientation == 'V')
             {
                 for(int i = 0 ; i < ship.size ; i++){
                     grid[x + i][y] = ship.letter;
@@ -714,6 +714,7 @@ int main() {
         strcpy(stp, player1);
     }
 
+    
     printf("%s will place his ships first\n", ftp);
 
     if(firstPlayer == 0){
@@ -815,12 +816,14 @@ int main() {
             printf("\nits %s's turn to play!",ftp);
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
-                print_hidden_grid(GridOne, difficulty);//TO DO
+                print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
-                Sleep(2);
-                printf("\033[2J\033[H");
+                
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H");  
                 fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
@@ -845,9 +848,9 @@ int main() {
                     SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
-                    coordi[0] = command[11];
-                    coordi[1] = command[12];
-                    coordi[2] = command[13];
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
@@ -865,7 +868,7 @@ int main() {
                 
 
                 ShowAvailableMoves(Player2);
-                print_hidden_grid(GridTwo, difficulty);//TO DO
+                print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
@@ -896,9 +899,9 @@ int main() {
                     SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
-                    coordi[0] = command[11];
-                    coordi[1] = command[12];
-                    coordi[2] = command[13];
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
@@ -912,7 +915,7 @@ int main() {
                     
                 }else  if(firstPlayer == 1){
                 ShowAvailableMoves(Player2);
-                print_hidden_grid(GridTwo, difficulty);//TO DO
+                print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
@@ -943,9 +946,9 @@ int main() {
                     SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
-                    coordi[0] = command[11];
-                    coordi[1] = command[12];
-                    coordi[2] = command[13];
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
@@ -961,7 +964,7 @@ int main() {
                 printf("its %s's turn to play!",stp);
 
                 ShowAvailableMoves(Player1);
-                print_hidden_grid(GridOne, difficulty);//TO DO
+                print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
@@ -992,9 +995,9 @@ int main() {
                     SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
-                    coordi[0] = command[11];
-                    coordi[1] = command[12];
-                    coordi[2] = command[13];
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
