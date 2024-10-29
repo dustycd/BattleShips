@@ -155,8 +155,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     int x ;
     int y =convertCoordinatesY(coord);
 
-    printf("%d is y in fire", y);
-
     if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
         x = convertCoordinatesX(coord);
     } else if (coord[1] == '1' && coord[2] == '0') { // A10
@@ -169,7 +167,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         if(oppGrid[x][y] == 'S') { //submarine
             oppGrid[x][y] = '*';
             Submarine->hits++;
-            printf("Hit!");
+            printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
                 printf("You sunk the %s!\n", Carrier->name);
                 Player->AllowedSmokeScreen = 1;
@@ -184,7 +182,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
          else if(oppGrid[x][y] == 'C') { //carrier
             oppGrid[x][y] = '*';
             Carrier->hits++;
-            printf("Hit!");
+            printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
                 printf("You sunk the %s!\n", Carrier->name);
                 Player->AllowedSmokeScreen = 1;
@@ -199,7 +197,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         else if(oppGrid[x][y] == 'D') { // destroyer
             oppGrid[x][y] = '*';
             Destroyer->hits++;
-            printf("Hit!");
+            printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
                 printf("You sunk the %s!\n", Carrier->name);
                 Player->AllowedSmokeScreen = 1;
@@ -214,7 +212,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         else if(oppGrid[x][y] == 'B') { // battleship
             oppGrid[x][y] = '*';
             Battleship->hits++;
-            printf("Hit!");
+            printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
                 printf("You sunk the %s!\n", Carrier->name);
                 Player->AllowedSmokeScreen = 1;
@@ -226,14 +224,14 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
                 Player->AllowedArtilery = 0;
             }
         }
-        else if (mode == 0) { // else missed
+        else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
             oppGrid[x][y] = 'o';
-            printf("Miss!");
+            printf("Miss!\n");
             Player->AllowedSmokeScreen = 0;
             Player->AllowedArtilery = 0;
         }
         else {
-            printf("Miss!");
+            printf("Miss!\n");
             Player->AllowedSmokeScreen = 0;
             Player->AllowedArtilery = 0;
         }
@@ -259,7 +257,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     } else if(oppGrid[x][y] == 'C') { //carrier
         oppGrid[x][y] = '*';
         Carrier->hits++;
-        printf("Hit!");
+        printf("Hit!\n");
         if (If_sunk(*Carrier, Player)) {
             printf("You sunk the %s!\n", Carrier->name);
             Player->AllowedSmokeScreen = 1;
@@ -273,7 +271,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     } else if(oppGrid[x][y] == 'D') { // destroyer
         oppGrid[x][y] = '*';
         Destroyer->hits++;
-        printf("Hit!");
+        printf("Hit!\n");
         if (If_sunk(*Destroyer, Player)) {
             printf("You sunk the %s!\n", Destroyer->name);
             Player->AllowedSmokeScreen = 1;
@@ -287,7 +285,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     } else if(oppGrid[x][y] == 'B') { // battleship
         oppGrid[x][y] = '*';
         Battleship->hits++;
-        printf("Hit!");
+        printf("Hit!\n");
         if (If_sunk(*Battleship, Player)) {
             printf("You sunk the %s!\n", Battleship->name);
             Player->AllowedSmokeScreen = 1;
@@ -300,11 +298,11 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
         }
     } else if(mode == 0){ // else missed easy
         oppGrid[x][y] = 'o';
-        printf("Miss!");
+        printf("Miss!\n");
         Player->AllowedSmokeScreen = 0;
         Player->AllowedArtilery = 0;
     } else {
-        printf("Miss!");
+        printf("Miss!\n");
         Player->AllowedSmokeScreen = 0;
         Player->AllowedArtilery = 0;
     }
@@ -340,12 +338,12 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     } else if(x == 10 && y == 10) {
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x, y);
     } else {
-        for(int i = x; i < x+2; i++) { // this part might be wrong. NEEDS TESTING
-            for(int j = y; j < y+2; j++) {
+        for(int i = x; i <= x+1; i++) {
+            for(int j = y; j <= y+1; j++) {
                 if(oppGrid[i][j] == 'S') { //submarine
                 oppGrid[i][j] = '*';
                 Submarine->hits++;
-                printf("Hit!");
+                printf("Hit!\n");
                 if (If_sunk(*Submarine, Player)) {
                     printf("You sunk the %s!\n", Submarine->name);
                     Player->AllowedSmokeScreen = 1;
@@ -360,7 +358,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
             else if(oppGrid[i][j] == 'C') { //carrier
                 oppGrid[i][j] = '*';
                 Carrier->hits++;
-                printf("Hit!");
+                printf("Hit!\n");
                 if (If_sunk(*Carrier, Player)) {
                     printf("You sunk the %s!\n", Carrier->name);
                     Player->AllowedSmokeScreen = 1;
@@ -375,7 +373,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
             else if(oppGrid[i][j] == 'D') { // destroyer
                 oppGrid[i][j] = '*';
                 Destroyer->hits++;
-                printf("Hit!");
+                printf("Hit!\n");
                 if (If_sunk(*Destroyer, Player)) {
                     printf("You sunk the %s!\n", Destroyer->name);
                     Player->AllowedSmokeScreen = 1;
@@ -390,7 +388,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
             else if(oppGrid[i][j] == 'B') { // battleship
                 oppGrid[i][j] = '*';
                 Battleship->hits++;
-                printf("Hit!");
+                printf("Hit!\n");
                 if (If_sunk(*Battleship, Player)) {
                     printf("You sunk the %s!\n", Battleship->name);
                     Player->AllowedSmokeScreen = 1;
@@ -404,12 +402,12 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
             }
             else if(mode == 0){ // else missed easy
                 oppGrid[i][j] = 'o';
-                printf("Miss!");
+                printf("Miss!\n");
                 Player->AllowedSmokeScreen = 0;
                 Player->AllowedArtilery = 0;
             }
             else {
-                printf("Miss!");
+                printf("Miss!\n");
                 Player->AllowedSmokeScreen = 0;
                 Player->AllowedArtilery = 0;
             }
