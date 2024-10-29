@@ -25,31 +25,67 @@ typedef struct
     int AllowedTorpedo;
 } Player;
 
-/*void initializeGrid(char grid[SIZE][SIZE]) {
+void initializeGrid(char grid[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             grid[i][j] = '~'; 
         }
     }
-}*/
+}
 
 /*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
-int convertCoordinatesX(char coord[]){
+int convertCoordinatesY(char coord[]){
     return coord[0] - 'A';
 }
-int convertCoordinatesY(char coord[]){
+int convertCoordinatesX(char coord[]){
     return coord[1] - '1';
 }
 void displayGrid(char grid[SIZE][SIZE]) {
-    printf("  A B C D E F G H I J\n"); 
+    printf("   A B C D E F G H I J\n"); 
     for (int i = 0; i < SIZE; i++) {
-        printf("%d ", i + 1); 
+        if(i < 9)
+        {
+            printf(" %d ", i + 1);
+        }
+        else
+        {
+            printf("%d ", i + 1);
+        }
         for (int j = 0; j < SIZE; j++) {
             printf("%c ", grid[i][j]); 
         }
         printf("\n");
     }
 }
+
+void print_hidden_grid(char grid[SIZE][SIZE])
+{
+    printf("   A B C D E F G H I J\n"); 
+    for(int i=0; i< SIZE; i++)
+    {
+        if(i < 9)
+        {
+            printf(" %d ", i + 1);
+        }
+        else
+        {
+            printf("%d ", i + 1);
+        }
+        for(int j=0; j<SIZE; j++)
+        {
+            if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S')     /*Function to print the hidden grid*/
+            {
+                printf("%c ", '~');
+            }
+            else
+            {
+                printf("%c ", grid[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
 
 int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
     if(orientation == 'h'){
@@ -385,10 +421,12 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
     int valid = 0;
 
     while(!valid){
+        displayGrid(grid);
         printf("Enter starting coordinates for %s (ex: A3) :", ship.name);
-        scanf("%s\n",coord);
+        scanf("%s",coord);
+        printf("\n");
         printf("Enter orientation (h for horizontal , v for vertical):");
-        scanf("%c", &orientation);
+        scanf(" %c", &orientation);
 
         int x = convertCoordinatesX(coord);
         int y;
@@ -404,11 +442,13 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
                 for(int i = 0 ; i < ship.size; i++){
                     grid[x][y + i] = ship.letter;
                 }
+                //displayGrid(grid);
             }else if (orientation == 'v')
             {
                 for(int i = 0 ; i < ship.size ; i++){
                     grid[x + i][y] = ship.letter;
                 }
+                //displayGrid(grid);
             }
             valid = 1;
         }else if (isValidShipPlacement(grid , x , y , ship.size , orientation) == 1)
@@ -421,39 +461,11 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
             printf("Invalid placement! Try again.\n");
         }
     }
+    displayGrid(grid);
 }
 /*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
 if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
 
-
-void print_hidden_grid(char grid[SIZE][SIZE])
-{
-    for(int i=0; i< SIZE; i++)
-    {
-        for(int j=0; j<SIZE; j++)
-        {
-            if(grid[i][j] == 'B' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S')     /*Function to print the hidden grid*/
-            {
-                printf("%c ", '~');
-            }
-            else
-            {
-                printf("%d ", grid[i][j]);
-            }
-        }
-    }
-}
-
-void print_grid(char grid[SIZE][SIZE])
-{
-    for(int i=0; i< SIZE; i++)
-    {
-        for(int j=0; j<SIZE; j++)
-        {
-            printf("%d ", grid[i][j]);
-        }
-    }
-}
 
 void ShowAvailableMoves(Player Player)
 {
@@ -484,8 +496,8 @@ int main() {
 
     srand(time(0));
 
-    //initializeGrid(GridOne);
-    //initializeGrid(GridTwo);
+    initializeGrid(GridOne);
+    initializeGrid(GridTwo);
 
     printf("Choose difficulty level (0 for Easy, 1 for Hard): ");
     scanf("%d", &difficulty);
@@ -513,44 +525,29 @@ int main() {
 
     if(firstPlayer == 0){
         placeShip(GridOne, P1Carrier);
-        print_grid(GridOne);
         placeShip(GridOne, P1Battleship);
-        print_grid(GridOne);
         placeShip(GridOne, P1Destroyer);
-        print_grid(GridOne);
         placeShip(GridOne, P1Submarine);
-        print_grid(GridOne);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridTwo, P2Carrier);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Battleship);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Destroyer);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Submarine);
-        print_grid(GridTwo);
     }else{
         placeShip(GridTwo, P2Carrier);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Battleship);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Destroyer);
-        print_grid(GridTwo);
         placeShip(GridTwo, P2Submarine);
-        print_grid(GridTwo);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridOne, P1Carrier);
-        print_grid(GridOne);
+
         placeShip(GridOne, P1Battleship);
-        print_grid(GridOne);
         placeShip(GridOne, P1Destroyer);
-        print_grid(GridOne);
         placeShip(GridOne, P1Submarine);
-        print_grid(GridOne);
     }
 
 
