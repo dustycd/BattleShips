@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 
 #define SIZE 10
 
@@ -612,6 +613,9 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
     int valid = 0;
 
     while(!valid){
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         displayGrid(grid);
         printf("Enter starting coordinates for %s (ex: A3) :", ship.name);
         scanf("%s",coord);
@@ -716,29 +720,76 @@ int main() {
 
     if(firstPlayer == 0){
         placeShip(GridOne, P1Carrier);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Battleship);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Destroyer);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Submarine);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridTwo, P2Carrier);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Battleship);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Destroyer);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Submarine);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
     }else{
         placeShip(GridTwo, P2Carrier);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Battleship);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Destroyer);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridTwo, P2Submarine);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridOne, P1Carrier);
-
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Battleship);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Destroyer);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
         placeShip(GridOne, P1Submarine);
+        Sleep(2);
+        printf("\033[2J\033[H");
+        fflush(stdout);
     }
 
 
@@ -747,13 +798,16 @@ int main() {
     int ifwon = 0;
     while (!ifwon){
         
-            printf("its %s's turn to play!",ftp);
+            printf("\nits %s's turn to play!",ftp);
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
+                Sleep(2);
+                printf("\033[2J\033[H");
+                fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
@@ -791,8 +845,7 @@ int main() {
                     }
                     /*here first players turn is done so we should add the grid for him to see the updates + i think we should track if 
                     any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-
-
+                    
                 printf("its %s's turn to play!",stp);
 
                 
@@ -801,6 +854,10 @@ int main() {
                 print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
+
+                Sleep(2);
+                printf("\033[2J\033[H");
+                fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
@@ -837,12 +894,16 @@ int main() {
                     }
                     /*here second players turn is done so we should add the grid for him to see the updates + i think we should track if 
                     any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+                    
                 }else  if(firstPlayer == 1){
                 ShowAvailableMoves(Player2);
                 print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
+                Sleep(2);
+                printf("\033[2J\033[H");
+                fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
@@ -881,13 +942,16 @@ int main() {
                     any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
 
 
-
                 printf("its %s's turn to play!",stp);
 
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
+
+                Sleep(2);
+                printf("\033[2J\033[H");
+                fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
@@ -924,10 +988,10 @@ int main() {
                     }
                     /*here second players turn is done so we should add the grid for him to see the updates + i think we should track if 
                     any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+                    
         }
 
     }
-    
     return 0;
 }
 
