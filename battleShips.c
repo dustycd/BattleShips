@@ -147,7 +147,7 @@ int If_sunk(Ship Ship, Player * Player)
     }
 }
 
-void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[]) {
+void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[], Player *Player) {
     printf("%c\n" ,coord[0]);
     printf("%c\n", coord[1]);
     printf("%c\n", coord[2]);
@@ -170,60 +170,148 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Submarine->hits++;
             printf("Hit!");
+            if (If_sunk(*Carrier, Player)) {
+                printf("You sunk the %s!\n", Carrier->name);
+                Player->AllowedSmokeScreen = 1;
+                Player->AllowedArtilery = 1;
+            }
+            else
+            {
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
+            }
         }
          else if(oppGrid[x][y] == 'C') { //carrier
             oppGrid[x][y] = '*';
             Carrier->hits++;
             printf("Hit!");
+            if (If_sunk(*Carrier, Player)) {
+                printf("You sunk the %s!\n", Carrier->name);
+                Player->AllowedSmokeScreen = 1;
+                Player->AllowedArtilery = 1;
+            }
+            else
+            {
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
+            }
         }
         else if(oppGrid[x][y] == 'D') { // destroyer
             oppGrid[x][y] = '*';
             Destroyer->hits++;
             printf("Hit!");
+            if (If_sunk(*Carrier, Player)) {
+                printf("You sunk the %s!\n", Carrier->name);
+                Player->AllowedSmokeScreen = 1;
+                Player->AllowedArtilery = 1;
+            }
+            else
+            {
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
+            }
         }
         else if(oppGrid[x][y] == 'B') { // battleship
             oppGrid[x][y] = '*';
             Battleship->hits++;
             printf("Hit!");
+            if (If_sunk(*Carrier, Player)) {
+                printf("You sunk the %s!\n", Carrier->name);
+                Player->AllowedSmokeScreen = 1;
+                Player->AllowedArtilery = 1;
+            }
+            else
+            {
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
+            }
         }
         else if (mode == 0) { // else missed
             oppGrid[x][y] = 'o';
             printf("Miss!");
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
         }
         else {
             printf("Miss!");
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
         }
         
 }
 
 
-void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode, int x, int y) {
+void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, int x, int y) {
     if(oppGrid[x][y] == 'S') { //submarine
         oppGrid[x][y] = '*';
         Submarine->hits++;
+        if (If_sunk(*Submarine, Player)) {
+            printf("You sunk the %s!\n", Submarine->name);
+            Player->AllowedSmokeScreen = 1;
+            Player->AllowedArtilery = 1;
+        }
+        else
+        {
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
+        }
         printf("Hit!");
     } else if(oppGrid[x][y] == 'C') { //carrier
         oppGrid[x][y] = '*';
         Carrier->hits++;
         printf("Hit!");
+        if (If_sunk(*Carrier, Player)) {
+            printf("You sunk the %s!\n", Carrier->name);
+            Player->AllowedSmokeScreen = 1;
+            Player->AllowedArtilery = 1;
+        }
+        else
+        {
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
+        }
     } else if(oppGrid[x][y] == 'D') { // destroyer
         oppGrid[x][y] = '*';
         Destroyer->hits++;
         printf("Hit!");
+        if (If_sunk(*Destroyer, Player)) {
+            printf("You sunk the %s!\n", Destroyer->name);
+            Player->AllowedSmokeScreen = 1;
+            Player->AllowedArtilery = 1;
+        }
+        else
+        {
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
+        }
     } else if(oppGrid[x][y] == 'B') { // battleship
         oppGrid[x][y] = '*';
         Battleship->hits++;
         printf("Hit!");
+        if (If_sunk(*Battleship, Player)) {
+            printf("You sunk the %s!\n", Battleship->name);
+            Player->AllowedSmokeScreen = 1;
+            Player->AllowedArtilery = 1;
+        }
+        else
+        {
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
+        }
     } else if(mode == 0){ // else missed easy
         oppGrid[x][y] = 'o';
         printf("Miss!");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
     } else {
         printf("Miss!");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
     }
 }
 
 // check if this move is playable in main (playable when opponent sinks a ship)
-void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode , char coord[]) { // NEEDS TESTING 
+void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[]) { // NEEDS TESTING 
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
     eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
@@ -243,14 +331,14 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     } 
 
     if(y == 10 && x < 10) {
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x+1, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x+1, y, Player);
     } else if(x == 10 && y < 10) {
         // remove up and down
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y+1, Player);
     } else if(x == 10 && y == 10) {
-        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
+        artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y, Player);
     } else {
         for(int i = x; i < x+2; i++) { // this part might be wrong. NEEDS TESTING
             for(int j = y; j < y+2; j++) {
@@ -258,28 +346,72 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 oppGrid[i][j] = '*';
                 Submarine->hits++;
                 printf("Hit!");
+                if (If_sunk(*Submarine, Player)) {
+                    printf("You sunk the %s!\n", Submarine->name);
+                    Player->AllowedSmokeScreen = 1;
+                    Player->AllowedArtilery = 1;
+                }
+                else
+                {
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;
+                }
             }
             else if(oppGrid[i][j] == 'C') { //carrier
                 oppGrid[i][j] = '*';
                 Carrier->hits++;
                 printf("Hit!");
+                if (If_sunk(*Carrier, Player)) {
+                    printf("You sunk the %s!\n", Carrier->name);
+                    Player->AllowedSmokeScreen = 1;
+                    Player->AllowedArtilery = 1;
+                }
+                else
+                {
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;
+                }
             }
             else if(oppGrid[i][j] == 'D') { // destroyer
                 oppGrid[i][j] = '*';
                 Destroyer->hits++;
                 printf("Hit!");
+                if (If_sunk(*Destroyer, Player)) {
+                    printf("You sunk the %s!\n", Destroyer->name);
+                    Player->AllowedSmokeScreen = 1;
+                    Player->AllowedArtilery = 1;
+                }
+                else
+                {
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;
+                }
             }
             else if(oppGrid[i][j] == 'B') { // battleship
                 oppGrid[i][j] = '*';
                 Battleship->hits++;
                 printf("Hit!");
+                if (If_sunk(*Battleship, Player)) {
+                    printf("You sunk the %s!\n", Battleship->name);
+                    Player->AllowedSmokeScreen = 1;
+                    Player->AllowedArtilery = 1;
+                }
+                else
+                {
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;
+                }
             }
             else if(mode == 0){ // else missed easy
                 oppGrid[i][j] = 'o';
                 printf("Miss!");
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
             }
             else {
                 printf("Miss!");
+                Player->AllowedSmokeScreen = 0;
+                Player->AllowedArtilery = 0;
             }
             }
         }
@@ -404,10 +536,17 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
                     Player->AllowedSmokeScreen = 1;
                     Player->AllowedArtilery = 1;
                 }
+                else
+                {
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;                   
+                }
                 hit = 1;
             } else {
                 if (mode == 0) {
-                    oppGrid[y][x] = 'o'; // Mark miss in easy mode
+                    oppGrid[y][x] = 'o';
+                    Player->AllowedSmokeScreen = 0;
+                    Player->AllowedArtilery = 0;      // Mark miss in easy mode
                 }
             }
         }
@@ -436,10 +575,17 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
                         Player->AllowedSmokeScreen = 1;
                         Player->AllowedArtilery = 1;
                     }
+                    else
+                    {
+                        Player->AllowedSmokeScreen = 0;
+                        Player->AllowedArtilery = 0;
+                    }
                     hit = 1;
                 } else {
                     if (mode == 0) {
-                        oppGrid[y][x] = 'o'; // Mark miss in easy mode
+                        oppGrid[y][x] = 'o'; 
+                        Player->AllowedSmokeScreen = 0;
+                        Player->AllowedArtilery = 0;     // Mark miss in easy mode
                     }
                 }
             }
@@ -604,7 +750,7 @@ int main() {
             printf("its %s's turn to play!",ftp);
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
-                print_hidden_grid(GridOne);//TO DO
+                print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
@@ -616,7 +762,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -634,7 +780,7 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
                     break;
                 case 'T':
                     coordi[0] = command[9];
@@ -652,7 +798,7 @@ int main() {
                 
 
                 ShowAvailableMoves(Player2);
-                print_hidden_grid(GridTwo);//TO DO
+                print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
@@ -663,7 +809,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -681,7 +827,7 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
                     break;
                 case 'T':
                     coordi[0] = command[9];
@@ -694,7 +840,7 @@ int main() {
                     any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 }else  if(firstPlayer == 1){
                 ShowAvailableMoves(Player2);
-                print_hidden_grid(GridTwo);//TO DO
+                print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
@@ -706,7 +852,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -724,7 +870,7 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
+                    artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi, &Player2);
                     break;
                 case 'T':
                     coordi[0] = command[9];
@@ -741,7 +887,7 @@ int main() {
                 printf("its %s's turn to play!",stp);
 
                 ShowAvailableMoves(Player1);
-                print_hidden_grid(GridOne);//TO DO
+                print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
@@ -752,7 +898,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -770,7 +916,7 @@ int main() {
                     coordi[0] = command[11];
                     coordi[1] = command[12];
                     coordi[2] = command[13];
-                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
                     break;
                 case 'T':
                     coordi[0] = command[9];
