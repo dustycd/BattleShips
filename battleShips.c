@@ -200,17 +200,17 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     nehke w nshouf kif badna nzabeta*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM
     // fixed for now
     
-    int x = convertCoordinatesX(coord);
-    int y;
+    int x ;
+    int y =convertCoordinatesY(coord);
 
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+        x = convertCoordinatesX(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
-        printf("Invalid coordinates.  You lose your turn.");
+        printf("Invalid coordinates. You lose your turn.");
         return;
-    }
+    } 
 
     if(y == 10 && x < 10) {
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, x, y);
@@ -259,17 +259,28 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
 int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
 {
 
-    int x = convertCoordinatesX(coord);
-    int y;
+    int x ;
+    int y = convertCoordinatesY(coord);
 
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+<<<<<<< HEAD
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+        x = convertCoordinatesX(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
-        printf("Invalid coordinates.  You lose your turn.");
+        printf("Invalid coordinates. You lose your turn.");
+        return;
+    } 
+=======
+    if (coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') { //"B3"
+        y = convertCoordinatesY(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { //"A10"
+        y = 9; 
+    } else {
+        printf("Invalid coordinates. You lose your turn.\n");
         return 0;
     }
+>>>>>>> 470e37e2d2a7152ba8e2ebeef8e00e03f456cd9a
 
     /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
     eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
@@ -283,13 +294,13 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     {
         for(int j=y; j<(y+3); j++)
         {
-            if(oppGrid[i][j] == 'o' || oppGrid[i][j] == '*' || oppGrid[i][j] == '~')
+            if(oppGrid[i][j] != 'o' && oppGrid[i][j] != '*' && oppGrid[i][j] != '~')
             {
-                printf("No enemy ships found");
+                printf("Enemy ships found");
             }
             else
             {
-                printf("Enemy ships found");
+                printf("No Enemy ships found");
             }
         }
     }
@@ -303,17 +314,17 @@ int SmokeScreen(char smokeGrid[][SIZE], Player *Player, char coord[]) {
         return 1;
     }
 
-    int x = convertCoordinatesX(coord);
-    int y;
+    int x ;
+    int y = convertCoordinatesY(coord);
 
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+        x = convertCoordinatesX(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
-        printf("Invalid coordinates.  You lose your turn.");
-        return 1;
-    }
+        printf("Invalid coordinates. You lose your turn.");
+        return;
+    } 
 
     // Validate coordinates
     if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) {
@@ -557,8 +568,7 @@ int main() {
     }
 
 
-    char commandl[20];
-    char commandn[5];
+    char command[20];
     char coordi[3];
     int ifwon = 0;
     while (!ifwon){
@@ -567,30 +577,39 @@ int main() {
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridOne);//TO DO
-                printf("Enter your move (e.g.: Fire B3) : ");
-                scanf("%9s %4s", commandl , commandn);
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf("%s", command);
 
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-                switch (commandl[0])
+                switch (command[0])
                 {
                 case 'F':
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , commandn);
-                    for(int i = 0 ; i < 4 ; i++){
-                        commandl[i]= 0;
-                        commandn[i]=0;
-                    }
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
+                    coordi[0] = command[11];
+                    coordi[1] = command[12];
+                    coordi[2] = command[13];
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'T':
+                    coordi[0] = command[9];
                     //Torpedo(GridTwo , )
                     /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
                 default:
@@ -606,29 +625,38 @@ int main() {
 
                 ShowAvailableMoves(Player2);
                 print_hidden_grid(GridTwo);//TO DO
-                printf("Enter your move (e.g.: Fire B3) : ");
-                scanf_s("%9s %4s", commandl , commandn);
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf_s("%s", command);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-                switch (commandl[0])
+                switch (command[0])
                 {
                 case 'F':
-                    fire( GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , commandn);
-                     for(int i = 0 ; i < 4 ; i++){
-                        commandl[i]= 0;
-                        commandn[i]=0;
-                    }
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
+                    coordi[0] = command[11];
+                    coordi[1] = command[12];
+                    coordi[2] = command[13];
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'T':
+                    coordi[0] = command[9];
                     //Torpedo(GridTwo , )
                     /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
                 default:
@@ -639,31 +667,39 @@ int main() {
                 }else  if(firstPlayer == 1){
                 ShowAvailableMoves(Player2);
                 print_hidden_grid(GridTwo);//TO DO
-                printf("Enter your move (e.g.: Fire B3) : ");
-                scanf("%9s %4s", commandl , commandn);
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf("%s", command);
 
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-                switch (commandl[0])
+                switch (command[0])
                 {
                 case 'F':
-
-                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , commandn);
-                     for(int i = 0 ; i < 4 ; i++){
-                        commandl[i]= 0;
-                        commandn[i]=0;
-                    }
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
+                    coordi[0] = command[11];
+                    coordi[1] = command[12];
+                    coordi[2] = command[13];
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'T':
+                    coordi[0] = command[9];
                     //Torpedo(GridTwo , )
                     /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
                 default:
@@ -678,29 +714,38 @@ int main() {
 
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridOne);//TO DO
-                printf("Enter your move (e.g.: Fire B3) : ");
-                scanf_s("%9s %4s", commandl , commandn);
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf_s("%s", command);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-                switch (commandl[0])
+                switch (command[0])
                 {
                 case 'F':
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , commandn);
-                     for(int i = 0 ; i < 4 ; i++){
-                        commandl[i]= 0;
-                        commandn[i]=0;
-                    }
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
                     SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
+                    coordi[0] = command[11];
+                    coordi[1] = command[12];
+                    coordi[2] = command[13];
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'T':
+                    coordi[0] = command[9];
                     //Torpedo(GridTwo , )
                     /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
                 default:
