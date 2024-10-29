@@ -119,12 +119,14 @@ int If_sunk(Ship Ship, Player * Player)
 
 void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[]) {
     
-    int x = convertCoordinatesX(coord);
-    int y;
+    int x ;
+    int y =convertCoordinatesY(coord);
+
+    printf("%d\n is y in fire", y);
     if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = convertCoordinatesY(coord);
+        int x = convertCoordinatesX(coord);
     } else if(coord[1] == '1' && coord[2] == '0' ) {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+        x = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
         printf("Invalid coordinates.  You lose your turn.");
         return;
@@ -561,7 +563,7 @@ int main() {
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridOne);//TO DO
                 printf("Enter your move (e.g.: Fire B3) : ");
-                scanf_s("%s", command);
+                scanf("%s", command);
 
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
