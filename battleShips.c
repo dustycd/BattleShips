@@ -347,7 +347,7 @@ int SmokeScreen(char smokeGrid[][SIZE], Player *Player, char coord[]) {
         x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
         printf("Invalid coordinates. You lose your turn.");
-        return;
+        return 1;
     } 
 
     // Validate coordinates
