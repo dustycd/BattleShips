@@ -123,12 +123,13 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     int y =convertCoordinatesY(coord);
 
     printf("%d\n is y in fire", y);
-    if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        int x = convertCoordinatesX(coord);
-    } else if(coord[1] == '1' && coord[2] == '0' ) {// A10
-        x = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+        x = convertCoordinatesX(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
-        printf("Invalid coordinates.  You lose your turn.");
+        printf("Invalid coordinates. You lose your turn.");
         return;
     } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
 
@@ -570,33 +571,33 @@ int main() {
                 switch (command[0])
                 {
                 case 'F':
-                    coordi[0]=command[5];
-                    coordi[1]=command[6];
-                    coordi[2]=command[7];
+                    coordi[0]=command[4];
+                    coordi[1]=command[5];
+                    coordi[2]=command[6];
                     fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
-                    coordi[0]=command[6];
-                    coordi[1]=command[7];
-                    coordi[2]=command[8];
+                    coordi[0]=command[5];
+                    coordi[1]=command[6];
+                    coordi[2]=command[7];
                     Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
-                    coordi[0]=command[6];
-                    coordi[1]= command[7];
-                    coordi[2]=command[8];
+                    coordi[0]=command[5];
+                    coordi[1]= command[6];
+                    coordi[2]=command[7];
                     SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
-                    coordi[0]=command[10];
-                    coordi[1]=command[11];
-                    coordi[2]=command[12];
+                    coordi[0]=command[9];
+                    coordi[1]=command[10];
+                    coordi[2]=command[11];
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'T':
-                    coordi[0]=command[8];
-                    coordi[1]=command[9];
-                    coordi[2]=command[10];
+                    coordi[0]=command[7];
+                    coordi[1]=command[8];
+                    coordi[2]=command[9];
                     //Torpedo(GridTwo , )
                     /*till now i dont know how i should inclune the torpedo function here so after we fix it i will -ali saad*/
                 default:
@@ -662,9 +663,9 @@ int main() {
                 switch (command[0])
                 {
                 case 'F':
-                    coordi[0]=command[5];
-                    coordi[1]=command[6];
-                    coordi[2]=command[7];
+                    coordi[0]=command[6];
+                    coordi[1]=command[7];
+                    coordi[2]=command[8];
                     fire(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , difficulty , coordi);
                     break;
                 case 'R':
@@ -712,7 +713,7 @@ int main() {
                     coordi[0]=command[5];
                     coordi[1]=command[6];
                     coordi[2]=command[7];
-                    fire( GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi);
                     break;
                 case 'R':
                     coordi[0]=command[6];
