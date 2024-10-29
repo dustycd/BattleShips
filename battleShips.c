@@ -33,6 +33,13 @@ typedef struct
     }
 }*/
 
+/*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
+int convertCoordinatesX(char coord[]){
+    return coord[0] - 'A';
+}
+int convertCoordinatesY(char coord[]){
+    return coord[1] - '1';
+}
 void displayGrid(char grid[SIZE][SIZE]) {
     printf("  A B C D E F G H I J\n"); 
     for (int i = 0; i < SIZE; i++) {
@@ -42,6 +49,23 @@ void displayGrid(char grid[SIZE][SIZE]) {
         }
         printf("\n");
     }
+}
+
+int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
+    if(orientation == 'h'){
+        if(y + shipSize > SIZE) return 0;
+        for (int i = 0 ; i < shipSize ; i++)
+        {
+            if(grid[x][y + i] != '~') return 1;
+        }
+    }else if (orientation == 'v'){
+        if(x + shipSize > SIZE) return 0;
+        for(int i = 0 ; i < shipSize ; i++){
+            if(grid[x + i][y] != '~') return 1;
+        }
+    }
+    return 2;
+    
 }
 
 int If_sunk(Ship Ship, Player * Player)
@@ -59,10 +83,10 @@ int If_sunk(Ship Ship, Player * Player)
 
 void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[]) {
     
-    int x = convertCoordinatesX(coord[0]);
+    int x = convertCoordinatesX(coord);
     int y;
     if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = convertCoordinatesY(coord[1]);
+        y = convertCoordinatesY(coord);
     } else if(coord[1] == '1' && coord[2] == '0' ) {// A10
         y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
@@ -134,7 +158,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     nehke w nshouf kif badna nzabeta*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM
     // fixed for now
     
-    int x = convertCoordinatesX(coord[0]);
+    int x = convertCoordinatesX(coord);
     int y;
 
     if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
@@ -193,7 +217,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
 int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
 {
 
-    int x = convertCoordinatesX(coord[0]);
+    int x = convertCoordinatesX(coord);
     int y;
 
     if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
@@ -231,7 +255,7 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     return 0;
 }
 
-int SmokeScreen(int smokeGrid[SIZE][SIZE], Player *Player, char coord[]) {
+int SmokeScreen(char smokeGrid[][SIZE], Player *Player, char coord[]) {
     if (Player->UsedSmoke >= Player->AllowedSmokeScreen) {
         printf("No smoke screens left. You lose your turn.\n");
         return 1;
@@ -246,7 +270,7 @@ int SmokeScreen(int smokeGrid[SIZE][SIZE], Player *Player, char coord[]) {
         y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
     } else {
         printf("Invalid coordinates.  You lose your turn.");
-        return;
+        return 1;
     }
 
     // Validate coordinates
@@ -353,14 +377,6 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
     return 0;
 }
 
-/*two functions to be able to convert coordinates from letters to number to be able to use them in our array*/
-int convertCoordinatesX(char coord[]){
-    return coord[0] - 'A';
-}
-int convertCoordinatesY(char coord[]){
-    return coord[1] - '1';
-}
-
 
 /*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
 /*attention to coordinates same error with placement in case it was 10 or above and also here x and y are the same*///fixed for now
@@ -374,10 +390,10 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
         printf("Enter orientation (h for horizontal , v for vertical):");
         scanf("%c", &orientation);
 
-        int x = convertCoordinatesX(coord[0]);
+        int x = convertCoordinatesX(coord);
         int y;
         if(coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') {
-            y = convertCoordinatesY(coord[1]);
+            y = convertCoordinatesY(coord);
             } 
             else if(coord[1] == '1' && coord[2] == '0' ) {// A10
             y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
@@ -409,23 +425,6 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
 /*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
 if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
 
-
-int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
-    if(orientation == 'h'){
-        if(y + shipSize > SIZE) return 0;
-        for (int i = 0 ; i < shipSize ; i++)
-        {
-            if(grid[x][y + i] != '~') return 1;
-        }
-    }else if (orientation == 'v'){
-        if(x + shipSize > SIZE) return 0;
-        for(int i = 0 ; i < shipSize ; i++){
-            if(grid[x + i][y] != '~') return 1;
-        }
-    }
-    return 2;
-    
-}
 
 void print_hidden_grid(char grid[SIZE][SIZE])
 {
@@ -491,13 +490,15 @@ int main() {
     printf("Choose difficulty level (0 for Easy, 1 for Hard): ");
     scanf("%d", &difficulty);
 
-   printf("Enter name for Player 1: ");
+    printf("Enter name for Player 1: ");
     scanf("%s", player1);
     printf("Enter name for Player 2: ");
     scanf("%s", player2);
 
-    Player Player1 = {player1, 4, 3, 0, 0, 0, 0, 0};
-    Player Player2 = {player2, 4, 3, 0, 0, 0, 0, 0};
+    Player Player1 = { .numShips = 4, .radarSweeps = 3, .AllowedSmokeScreen = 0, . UsedSmoke = 0, .AllowedArtilery = 0, .AllowedTorpedo =0};
+    Player Player2 = { .numShips = 4, .radarSweeps = 3, .AllowedSmokeScreen = 0, . UsedSmoke = 0, .AllowedArtilery = 0, .AllowedTorpedo =0};
+    strcpy(Player1.name, player1);
+    strcpy(Player2.name, player2);
 
     int firstPlayer = rand() % 2; 
     if (firstPlayer == 0) {
