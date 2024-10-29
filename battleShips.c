@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <windows.h>
 
 #define SIZE 10
 
@@ -613,8 +612,9 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
     int valid = 0;
 
     while(!valid){
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         displayGrid(grid);
         printf("Enter starting coordinates for %s (ex: A3) :", ship.name);
@@ -720,75 +720,91 @@ int main() {
 
     if(firstPlayer == 0){
         placeShip(GridOne, P1Carrier);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");   
         fflush(stdout);
         placeShip(GridOne, P1Battleship);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridOne, P1Destroyer);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridOne, P1Submarine);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridTwo, P2Carrier);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Battleship);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Destroyer);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Submarine);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
     }else{
         placeShip(GridTwo, P2Carrier);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Battleship);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Destroyer);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridTwo, P2Submarine);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
 
         printf("now its %s's turn to place his ships\n", stp);
 
         placeShip(GridOne, P1Carrier);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridOne, P1Battleship);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridOne, P1Destroyer);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
         placeShip(GridOne, P1Submarine);
-        Sleep(2);
-        printf("\033[2J\033[H");
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
         fflush(stdout);
     }
 
@@ -855,8 +871,9 @@ int main() {
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
-                Sleep(2);
-                printf("\033[2J\033[H");
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H");  
                 fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
@@ -901,8 +918,9 @@ int main() {
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
 
-                Sleep(2);
-                printf("\033[2J\033[H");
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H"); 
                 fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
@@ -949,8 +967,9 @@ int main() {
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf_s("%s", command);
 
-                Sleep(2);
-                printf("\033[2J\033[H");
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H"); 
                 fflush(stdout);
 
                 /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
