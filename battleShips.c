@@ -262,12 +262,12 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     int x = convertCoordinatesX(coord);
     int y;
 
-    if(coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') {// B3
-        y = coord[1] - '1';
-    } else if(coord[1] >= '0' && coord[1] <= '9' && coord[2] >= '0' && coord[2] <= '9') {// A10
-        y = (coord[1] - '0') * 10 + (coord[2] - '1' - '0');
+    if (coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') { //"B3"
+        y = convertCoordinatesY(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { //"A10"
+        y = 9; 
     } else {
-        printf("Invalid coordinates.  You lose your turn.");
+        printf("Invalid coordinates. You lose your turn.\n");
         return 0;
     }
 
@@ -283,13 +283,13 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     {
         for(int j=y; j<(y+3); j++)
         {
-            if(oppGrid[i][j] == 'o' || oppGrid[i][j] == '*' || oppGrid[i][j] == '~')
+            if(oppGrid[i][j] != 'o' && oppGrid[i][j] != '*' && oppGrid[i][j] != '~')
             {
-                printf("No enemy ships found");
+                printf("Enemy ships found");
             }
             else
             {
-                printf("Enemy ships found");
+                printf("No Enemy ships found");
             }
         }
     }
