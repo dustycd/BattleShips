@@ -318,13 +318,10 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     }
 }
 
-// check if this move is playable in main (playable when opponent sinks a ship)
+
 void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[]) { // NEEDS TESTING 
 
-    /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
-    eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
-    nehke w nshouf kif badna nzabeta*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM
-    // fixed for now
+    
     
     int x ;
     int y =convertCoordinatesY(coord);
@@ -445,9 +442,7 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         return 0;
     }
 
-    /*hon b hal function lezem l 3emela yzabit ossit l coordinates cz b radar sweeps the coordinate l lezem nhota is the top-left one so
-    eza eja hada haf B10 it will go off grid w eza hek idk eza bet bayin bs B10 aw its counted as invalid coordinate w b rouh dawro lezem
-    nehke w nshouf kif badna nzabeta*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+
     if(Player->radarSweeps == 0)
     {
         printf("No radar sweeps left. You lose your turn.\n");
@@ -625,8 +620,6 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
 }
 
 
-/*the function place ships, ask the user to place coordinates of where he wanna put his ships*/
-/*attention to coordinates same error with placement in case it was 10 or above and also here x and y are the same*///fixed for now
 void placeShip(char grid[SIZE][SIZE] , Ship ship){
     char coord[3],orientation;
     int valid = 0;
@@ -674,18 +667,14 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
     }
     displayGrid(grid);
 }
-/*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
-if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
-int whoWins(Player * Player1, Player * Player2)
+int whoWins(Player  Player1, Player  Player2)
 {
-    if(Player1->numShips == 0)
+    if(Player1.numShips == 0)
     {
-        printf("Player 2 Wins !!");
         return 2;
     }
-    else if(Player2->numShips == 0)
+    else if(Player2.numShips == 0)
     {
-        printf("Player 1 Wins !!");
         return 1;
     }
     else
@@ -846,22 +835,22 @@ int main() {
     char command[20];
     char coordi[3];
     int ifwon = 0;
+    int wonthegame;
     while (!ifwon){
-        
+
             printf("\nits %s's turn to play!",ftp);
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
-
+                wonthegame = whoWins(Player1 , Player2);
                 
                 printf("\033c");    
                 printf("\033[2J");  
                 printf("\033[H");  
                 fflush(stdout);
 
-                /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
                 {
                 case 'F':
@@ -895,8 +884,14 @@ int main() {
                 default:
                     break;
                     }
-                    /*here first players turn is done so we should add the grid for him to see the updates + i think we should track if 
-                    any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+                        if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", Player2.name);
+                            break;
+                        }
+                    
                     
                 printf("its %s's turn to play!",stp);
 
@@ -912,7 +907,6 @@ int main() {
                 printf("\033[H");  
                 fflush(stdout);
 
-                /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
                 {
                 case 'F':
@@ -945,21 +939,26 @@ int main() {
                 default:
                     break;
                     }
-                    /*here second players turn is done so we should add the grid for him to see the updates + i think we should track if 
-                    any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", Player2.name);
+                            break;
+                        }
                     
                 }else  if(firstPlayer == 1){
                 ShowAvailableMoves(Player2);
                 print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
+                wonthegame = whoWins(Player1 , Player2);
 
                 printf("\033c");    
                 printf("\033[2J");  
                 printf("\033[H"); 
                 fflush(stdout);
 
-                /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
                 {
                 case 'F':
@@ -992,8 +991,13 @@ int main() {
                 default:
                     break;
                     }
-                    /*here first players turn is done so we should add the grid for him to see the updates + i think we should track if 
-                    any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", Player2.name);
+                            break;
+                        }
 
 
                 printf("its %s's turn to play!",stp);
@@ -1008,7 +1012,6 @@ int main() {
                 printf("\033[H"); 
                 fflush(stdout);
 
-                /*hon we have many problems, first concerning the struct of ships with pointers and second with the players*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
                 switch (command[0])
                 {
                 case 'F':
@@ -1041,9 +1044,14 @@ int main() {
                 default:
                     break;
                     }
-                    /*here second players turn is done so we should add the grid for him to see the updates + i think we should track if 
-                    any ships where sunk if yes we should say it here*///-ALI SAAD IF U DIDNT GET THE PROBLEM ASK HIM 
-                    
+
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", Player2.name);
+                            break;
+                        }  
         }
 
     }
