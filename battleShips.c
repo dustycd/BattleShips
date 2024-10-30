@@ -958,6 +958,7 @@ int main() {
                 default:
                     break;
                     }
+                    wonthegame = whoWins(Player1 , Player2);
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
                             ifwon =1;
@@ -973,7 +974,6 @@ int main() {
                 print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
                 scanf("%s", command);
-                wonthegame = whoWins(Player1 , Player2);
 
                 printf("\033c");    
                 printf("\033[2J");  
@@ -1013,6 +1013,7 @@ int main() {
                 default:
                     break;
                     }
+                    wonthegame = whoWins(Player1 , Player2);
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
                             ifwon =1;
@@ -1069,7 +1070,7 @@ int main() {
                 default:
                     break;
                     }
-
+                    wonthegame = whoWins(Player1 , Player2);
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
                             ifwon =1;
