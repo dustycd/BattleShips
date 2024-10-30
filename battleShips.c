@@ -682,11 +682,11 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
 }
 int whoWins(Player  Player1, Player  Player2)
 {
-    if(Player1.numShips == 0)
+    if(Player1.numShips == 0 && Player2.numShips != 0)
     {
         return 2;
     }
-    else if(Player2.numShips == 0)
+    else if(Player2.numShips == 0 && Player1.numShips != 0)
     {
         return 1;
     }
@@ -897,14 +897,19 @@ int main() {
                 default:
                     break;
                     }
-                        if(wonthegame == 1){
-                            printf("%s won the game!!!", Player1.name);
-                            break;
-                        }else if(wonthegame == 2){
-                            printf("%s won the game!!!", Player2.name);
-                            break;
-                        }
-                    
+                    wonthegame = whoWins(Player1 , Player2);
+                    if(wonthegame == 1)
+                    {
+                        printf("%s won the game!!!", Player1.name);
+                        ifwon =1;
+                        break;
+                    }
+                    else if(wonthegame ==2)
+                    {
+                        printf("%s won the game!!!", Player2.name);
+                        ifwon=1;
+                        break;
+                    }
                     
                 printf("its %s's turn to play!",stp);
 
@@ -955,9 +960,11 @@ int main() {
                     }
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
                             break;
                         }else if(wonthegame == 2){
                             printf("%s won the game!!!", Player2.name);
+                            ifwon =1;
                             break;
                         }
                     
@@ -1008,9 +1015,11 @@ int main() {
                     }
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
                             break;
                         }else if(wonthegame == 2){
                             printf("%s won the game!!!", Player2.name);
+                            ifwon =1;
                             break;
                         }
 
@@ -1063,9 +1072,11 @@ int main() {
 
                     if(wonthegame == 1){
                             printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
                             break;
                         }else if(wonthegame == 2){
                             printf("%s won the game!!!", Player2.name);
+                            ifwon=1;
                             break;
                         }  
         }
