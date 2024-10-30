@@ -423,7 +423,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
 int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
 {
     int found =0;
-    int x ;
+    int x = convertCoordinatesX(coord);
     int y = convertCoordinatesY(coord);
 
     if (coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') { //"B3"
@@ -457,6 +457,7 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     if(found == 1)
     {
         printf("Enemy Ships Found.");
+        Player->radarSweeps--;
     }
     else
     {
@@ -662,12 +663,12 @@ if its valid so to see if it exceeds grid size or no and if its overlaps with ot
 
 void ShowAvailableMoves(Player Player)
 {
-    printf("Available Moves:\n");
+    printf("\nAvailable Moves:\n");
     printf("1. Fire\n");
-    printf("2. Radar\n");
-    printf("3. Smoke\n");
-    printf("4. Artillery\n");
-    printf("5. Torpedo\n");
+    printf("2. Radar (Available: %d)\n", Player.radarSweeps);
+    printf("3. Smoke (Available: %d)\n", Player.AllowedSmokeScreen);
+    printf("4. Artillery (Available: %d)\n", Player.AllowedArtilery);
+    printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
 int main() {
     int rows = SIZE;
