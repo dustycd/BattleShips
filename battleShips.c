@@ -893,7 +893,7 @@ int main() {
                 case 'T':
                     coordi[0] = command[9];
                     Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
-                    
+                    break;
                 default:
                     break;
                     }
@@ -949,6 +949,7 @@ int main() {
                 case 'T':
                     coordi[0] = command[9];
                     Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
+                    break;
                 default:
                     break;
                     }
@@ -1001,6 +1002,7 @@ int main() {
                 case 'T':
                     coordi[0] = command[9];
                     Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
+                    break;
                 default:
                     break;
                     }
@@ -1054,6 +1056,7 @@ int main() {
                 case 'T':
                     coordi[0] = command[9];
                     Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    break;
                 default:
                     break;
                     }
