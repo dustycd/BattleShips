@@ -215,7 +215,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Battleship->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Carrier, Player)) {
+            if (If_sunk(*Battleship, Player)) {
                 printf("You sunk the %s!\n", Battleship->name);
                 Player->AllowedTorpedo = 1;
                 Player->AllowedArtilery = 1;
