@@ -676,7 +676,23 @@ void placeShip(char grid[SIZE][SIZE] , Ship ship){
 }
 /*the function isValidShipPlacement take the coordinates given by the user for a ship and its orientation to check
 if its valid so to see if it exceeds grid size or no and if its overlaps with other ships*/
-
+int whoWins(Player * Player1, Player * Player2)
+{
+    if(Player1->numShips == 0)
+    {
+        printf("Player 2 Wins !!");
+        return 2;
+    }
+    else if(Player2->numShips == 0)
+    {
+        printf("Player 1 Wins !!");
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 void ShowAvailableMoves(Player Player)
 {
