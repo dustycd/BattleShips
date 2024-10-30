@@ -158,6 +158,8 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
         printf("Invalid coordinates. You lose your turn.");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
         return;
     } // line 67-76 changes coordinates of user (B3/ A10) to x and y so we can use them to acess the right place in the grid
 
@@ -165,8 +167,8 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Submarine->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Carrier, Player)) {
-                printf("You sunk the %s!\n", Carrier->name);
+            if (If_sunk(*Submarine, Player)) {
+                printf("You sunk the %s!\n", Submarine->name);
                 Player->AllowedSmokeScreen = 1;
                 Player->AllowedArtilery = 1;
             }
@@ -195,8 +197,8 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Destroyer->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Carrier, Player)) {
-                printf("You sunk the %s!\n", Carrier->name);
+            if (If_sunk(*Destroyer, Player)) {
+                printf("You sunk the %s!\n", Destroyer->name);
                 Player->AllowedSmokeScreen = 1;
                 Player->AllowedArtilery = 1;
             }
@@ -211,7 +213,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             Battleship->hits++;
             printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
-                printf("You sunk the %s!\n", Carrier->name);
+                printf("You sunk the %s!\n", Battleship->name);
                 Player->AllowedSmokeScreen = 1;
                 Player->AllowedArtilery = 1;
             }
@@ -222,6 +224,8 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             }
         }else if(oppGrid[x][y] == '*'){
             printf("This coordinates has already been hit. You loose turn!");
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
         }
         else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
             oppGrid[x][y] = 'o';
@@ -299,6 +303,8 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     }
     else if(oppGrid[x][y] == '*'){
             printf("This coordinates has already been hit. You loose turn!");
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
     } 
     else if(mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B'){ // else missed easy
         oppGrid[x][y] = 'o';
@@ -329,6 +335,8 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
         x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
         printf("Invalid coordinates. You lose your turn.");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
         return;
     } 
 
@@ -432,6 +440,8 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         y = 9; 
     } else {
         printf("Invalid coordinates. You lose your turn.\n");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
         return 0;
     }
 
@@ -441,6 +451,8 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     if(Player->radarSweeps == 0)
     {
         printf("No radar sweeps left. You lose your turn.\n");
+        Player->AllowedSmokeScreen = 0;
+        Player->AllowedArtilery = 0;
         return 1;
     }
     for(int i=x; i<(x+3); i++)
@@ -463,7 +475,8 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     {
         printf("No enemy ships found");
     }
-
+    Player->AllowedSmokeScreen = 0;
+    Player->AllowedArtilery = 0;
     return 0;
 }
 
@@ -499,7 +512,8 @@ int SmokeScreen(char smokeGrid[][SIZE], Player *Player, char coord[]) {
     }
 
     Player->UsedSmoke++;
-
+    Player->AllowedSmokeScreen = 0;
+    Player->AllowedArtilery = 0;
     return 0;
 }
 
@@ -594,6 +608,8 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
             }
         } else {
             printf("Invalid input. You lose your turn.\n");
+            Player->AllowedSmokeScreen = 0;
+            Player->AllowedArtilery = 0;
             return 1;
         }
     }
@@ -603,7 +619,8 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Des
     }
 
     Player->AllowedTorpedo--; // Mark torpedo as used
-
+    Player->AllowedSmokeScreen = 0;
+    Player->AllowedArtilery = 0;
     return 0;
 }
 
@@ -670,6 +687,7 @@ void ShowAvailableMoves(Player Player)
     printf("4. Artillery (Available: %d)\n", Player.AllowedArtilery);
     printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
+
 int main() {
     int rows = SIZE;
     int columns = SIZE;
