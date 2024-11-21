@@ -487,149 +487,81 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
     return 0;
 }
 
-int SmokeScreen(char smokeGrid[][SIZE], Player *Player, char coord[]) {
-    if (Player->UsedSmoke >= Player->AllowedSmokeScreen) {
+int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
+    if (player->UsedSmoke >= player->AllowedSmokeScreen) {
         printf("No smoke screens left. You lose your turn.\n");
-        return 1;
+        return 1; // Turn lost
     }
 
-    int x ;
+    int x = convertCoordinatesX(coord);
     int y = convertCoordinatesY(coord);
-
-    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
-        x = convertCoordinatesX(coord);
-    } else if (coord[1] == '1' && coord[2] == '0') { // A10
-        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
-    } else {
-        printf("Invalid coordinates. You lose your turn.");
-        return 1;
-    } 
 
     // Validate coordinates
     if (x < 0 || x >= SIZE - 1 || y < 0 || y >= SIZE - 1) {
         printf("Invalid coordinates for smoke screen. You lose your turn.\n");
-        return 1;
+        return 1; // Turn lost
     }
 
     // Apply smoke screen to a 2x2 area
     for (int i = x; i < x + 2; i++) {
         for (int j = y; j < y + 2; j++) {
-            smokeGrid[i][j] = 'x'; // Mark cell as smoked
+            grid[i][j] = 'x'; // Mark cell as obscured
         }
     }
 
-    Player->UsedSmoke++;
-    Player->AllowedTorpedo = 0;
-    Player->AllowedArtilery = 0;
-    return 0;
+    printf("Smoke screen deployed at %c%d!\n", y + 'A', x + 1);
+    player->UsedSmoke++;
+
+    // Clear screen to preserve secrecy
+    printf("\033c");
+    printf("\033[2J");
+    printf("\033[H");
+    fflush(stdout);
+
+    return 0; // Successful turn
 }
 
-int Torpedo(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, char input[]) {
-    if (Player->AllowedTorpedo == 0) {
-        printf("Torpedo has already been used. You lose your turn.\n");
-        return 1;
+int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char input[]) {
+    if (player->AllowedTorpedo == 0) {
+        printf("Torpedo is not unlocked yet. You lose your turn.\n");
+        return 1; // Turn lost
     }
 
     int hit = 0;
 
-    if ((input[0] >= 'A' && input[0] <= 'J') && input[1] == '\0') {
+    if (strlen(input) == 1 && input[0] >= 'A' && input[0] <= 'J') {
         // Column attack
-        int x = input[0] - 'A';
-        if (x < 0 || x >= SIZE) {
-            printf("Invalid column. You lose your turn.\n");
-            return 1;
-        }
-        for (int y = 0; y < SIZE; y++) {
-            char cell = oppGrid[y][x];
-            Ship *ship = NULL;
-
-            // Check if the cell matches any ship
-            if (cell == Carrier->letter) ship = Carrier;
-            else if (cell == Battleship->letter) ship = Battleship;
-            else if (cell == Destroyer->letter) ship = Destroyer;
-            else if (cell == Submarine->letter) ship = Submarine;
-
-            if (ship) {
-                oppGrid[y][x] = '*';
-                ship->hits++;
-                printf("Hit at %c%d!\n", x + 'A', y + 1);
-
-                // Check if the ship is sunk
-                if (If_sunk(*ship, Player)) {
-                    printf("You sunk the %s!\n", ship->name);
-                    Player->AllowedTorpedo = 1;
-                    Player->AllowedArtilery = 1;
-                    Player->AllowedSmokeScreen++;
-                }
-                else
-                {
-                    Player->AllowedTorpedo = 0;
-                    Player->AllowedArtilery = 0;                   
-                }
+        int col = input[0] - 'A';
+        printf("Torpedo fired at column %c!\n", input[0]);
+        for (int i = 0; i < SIZE; i++) {
+            if (oppGrid[i][col] == carrier->letter || oppGrid[i][col] == battleship->letter || oppGrid[i][col] == destroyer->letter || oppGrid[i][col] == submarine->letter) {
+                oppGrid[i][col] = '*';
                 hit = 1;
-            } else {
-                if (mode == 0) {
-                    oppGrid[y][x] = 'o';
-                    Player->AllowedTorpedo = 0;
-                    Player->AllowedArtilery = 0;      // Mark miss in easy mode
-                }
+            }
+        }
+    } else if (strlen(input) <= 2 && input[0] >= '1' && input[0] <= '9') {
+        // Row attack
+        int row = atoi(input) - 1;
+        printf("Torpedo fired at row %d!\n", row + 1);
+        for (int i = 0; i < SIZE; i++) {
+            if (oppGrid[row][i] == carrier->letter || oppGrid[row][i] == battleship->letter || oppGrid[row][i] == destroyer->letter || oppGrid[row][i] == submarine->letter) {
+                oppGrid[row][i] = '*';
+                hit = 1;
             }
         }
     } else {
-        int y = atoi(input) - 1;
-        if (y >= 0 && y < SIZE) {
-            // Row attack
-            for (int x = 0; x < SIZE; x++) {
-                char cell = oppGrid[y][x];
-                Ship *ship = NULL;
-
-                // Check if the cell matches any ship
-                if (cell == Carrier->letter) ship = Carrier;
-                else if (cell == Battleship->letter) ship = Battleship;
-                else if (cell == Destroyer->letter) ship = Destroyer;
-                else if (cell == Submarine->letter) ship = Submarine;
-
-                if (ship) {
-                    oppGrid[y][x] = '*';
-                    ship->hits++;
-                    printf("Hit at %c%d!\n", x + 'A', y + 1);
-
-                    // Check if the ship is sunk
-                    if (If_sunk(*ship, Player)) {
-                        printf("You sunk the %s!\n", ship->name);
-                        Player->AllowedTorpedo = 1;
-                        Player->AllowedArtilery = 1;
-                        Player->AllowedSmokeScreen++;
-                    }
-                    else
-                    {
-                        Player->AllowedTorpedo = 0;
-                        Player->AllowedArtilery = 0;
-                    }
-                    hit = 1;
-                } else {
-                    if (mode == 0) {
-                        oppGrid[y][x] = 'o'; 
-                        Player->AllowedTorpedo = 0;
-                        Player->AllowedArtilery = 0;     // Mark miss in easy mode
-                    }
-                }
-            }
-        } else {
-            printf("Invalid input. You lose your turn.\n");
-            Player->AllowedTorpedo = 0;
-            Player->AllowedArtilery = 0;
-            return 1;
-        }
+        printf("Invalid torpedo input. You lose your turn.\n");
+        return 1; // Turn lost
     }
 
-    if (!hit) {
-        printf("Torpedo missed!\n");
+    if (hit) {
+        printf("Torpedo hit enemy ships!\n");
+    } else {
+        printf("Torpedo missed.\n");
     }
 
-    Player->AllowedTorpedo--; // Mark torpedo as used
-    Player->AllowedArtilery = 0;
-    return 0;
+    player->AllowedTorpedo--; // Torpedo can only be used once
+    return 0; // Successful turn
 }
 
 
