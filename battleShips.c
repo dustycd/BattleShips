@@ -521,13 +521,12 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *des
 
     int hit = 0; // To track whether the torpedo hits any ship
 
-    // Process 'target' as either a column letter or row number
-    if (target[0] >= 'A' && target[0] <= 'J') {
-        // Column torpedo
+    // Validate if `target` is a column (e.g., "A") or a row (e.g., "1" to "10")
+    if (strlen(target) == 1 && target[0] >= 'A' && target[0] <= 'J') {
+        // Target is a column
         int col = target[0] - 'A'; // Convert column letter to index
         printf("Torpedo fired at column %c!\n", target[0]);
 
-        // Iterate over all rows in the specified column
         for (int i = 0; i < SIZE; i++) {
             char cell = oppGrid[i][col];
             if (cell == carrier->letter || cell == battleship->letter || cell == destroyer->letter || cell == submarine->letter) {
@@ -541,27 +540,17 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *des
                 else if (cell == submarine->letter) submarine->hits++;
 
                 // Check if the ship is sunk
-                if (If_sunk(*carrier, player)) {
-                    printf("You sunk the %s!\n", carrier->name);
-                }
-                if (If_sunk(*battleship, player)) {
-                    printf("You sunk the %s!\n", battleship->name);
-                }
-                if (If_sunk(*destroyer, player)) {
-                    printf("You sunk the %s!\n", destroyer->name);
-                }
-                if (If_sunk(*submarine, player)) {
-                    printf("You sunk the %s!\n", submarine->name);
-                }
+                if (If_sunk(*carrier, player)) printf("You sunk the %s!\n", carrier->name);
+                if (If_sunk(*battleship, player)) printf("You sunk the %s!\n", battleship->name);
+                if (If_sunk(*destroyer, player)) printf("You sunk the %s!\n", destroyer->name);
+                if (If_sunk(*submarine, player)) printf("You sunk the %s!\n", submarine->name);
             }
         }
-    }
-    else if (target[0] >= '1' && target[0] <= '9') {
-        // Row torpedo
-        int row = target[0] - '1'; // Convert row number to index
+    } else if ((strlen(target) == 1 && target[0] >= '1' && target[0] <= '9') || (strlen(target) == 2 && target[0] == '1' && target[1] == '0')) {
+        // Target is a row
+        int row = atoi(target) - 1; // Convert row number to index
         printf("Torpedo fired at row %d!\n", row + 1);
 
-        // Iterate over all columns in the specified row
         for (int j = 0; j < SIZE; j++) {
             char cell = oppGrid[row][j];
             if (cell == carrier->letter || cell == battleship->letter || cell == destroyer->letter || cell == submarine->letter) {
@@ -575,18 +564,10 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *des
                 else if (cell == submarine->letter) submarine->hits++;
 
                 // Check if the ship is sunk
-                if (If_sunk(*carrier, player)) {
-                    printf("You sunk the %s!\n", carrier->name);
-                }
-                if (If_sunk(*battleship, player)) {
-                    printf("You sunk the %s!\n", battleship->name);
-                }
-                if (If_sunk(*destroyer, player)) {
-                    printf("You sunk the %s!\n", destroyer->name);
-                }
-                if (If_sunk(*submarine, player)) {
-                    printf("You sunk the %s!\n", submarine->name);
-                }
+                if (If_sunk(*carrier, player)) printf("You sunk the %s!\n", carrier->name);
+                if (If_sunk(*battleship, player)) printf("You sunk the %s!\n", battleship->name);
+                if (If_sunk(*destroyer, player)) printf("You sunk the %s!\n", destroyer->name);
+                if (If_sunk(*submarine, player)) printf("You sunk the %s!\n", submarine->name);
             }
         }
     } else {
