@@ -513,7 +513,7 @@ int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
     return 0; 
 }
 
-int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, char target[]) {
+int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player,int mode, char target[]) {
     if (player->AllowedTorpedo <= 0) {
         printf("Torpedo is not unlocked yet or has already been used. You lose your turn.\n");
         return 1; // Turn lost
