@@ -513,7 +513,7 @@ int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
     return 0; 
 }
 
-int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player,int mode, char target[]) {
+int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char target[]) {
     if (player->AllowedTorpedo <= 0) {
         printf("Torpedo is not unlocked yet or has already been used. You lose your turn.\n");
         return 1; // Turn lost
@@ -521,8 +521,9 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *des
 
     int hit = 0; // To track whether the torpedo hits any ship
 
-    // Check if targeting a column (e.g., 'A' to 'J')
-    if (strlen(target) == 1 && target[0] >= 'A' && target[0] <= 'J') {
+    // Process 'target' as either a column letter or row number
+    if (target[0] >= 'A' && target[0] <= 'J') {
+        // Column torpedo
         int col = target[0] - 'A'; // Convert column letter to index
         printf("Torpedo fired at column %c!\n", target[0]);
 
@@ -555,9 +556,9 @@ int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *des
             }
         }
     }
-    // Check if targeting a row (e.g., "1" to "10")
-    else if (atoi(target) >= 1 && atoi(target) <= SIZE) {
-        int row = atoi(target) - 1; // Convert row number to index
+    else if (target[0] >= '1' && target[0] <= '9') {
+        // Row torpedo
+        int row = target[0] - '1'; // Convert row number to index
         printf("Torpedo fired at row %d!\n", row + 1);
 
         // Iterate over all columns in the specified row
