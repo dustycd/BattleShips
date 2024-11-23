@@ -688,10 +688,14 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         }
     }
 
-    while(!isEmpty(botHitBattleShip)) {
+    while(!isEmpty(botHitBattleShip) && If_sunk(*Battleship , Player) == 0) { //if didnt sink
         int x = botHitBattleShip[countBattleShip].x;
         int y = botHitBattleShip[countBattleShip].y;
         char letter;
+
+        //we need to check if our current is or miss or hit 
+        //if its hit it will continue normally but if its miss what we have to do is that we return at index 0
+
         //we need to check if oppgrid at x and y is water if it is we have to back track
         //we were thinking about if we need to back track we delete all the components in the array except the original hit so at index 0
         if(!isOutOfBounds(x+1, y)) {
