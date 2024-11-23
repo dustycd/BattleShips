@@ -514,6 +514,15 @@ int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
 }
 
 void Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char coordi[]) {
+    int x;
+    int y =convertCoordinatesY(coordi);
+
+    if (coordi[1] >= '1' && coordi[1] <= '9' && coordi[2] == '\0') { // B3
+        x = convertCoordinatesX(coordi);
+    } else if (coordi[1] == '1' && coordi[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
+    }
+    
     char newcoord[3];
     char c = 'A';
     if(coordi[0] >= '1' && coordi[0] <= '9'){
@@ -534,28 +543,8 @@ void Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *de
             fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
         }
     }else{
-        int mychar = coordi[0];
-        if(mychar >= 65 && mychar <= 74){
-            newcoord[0] = coordi[0];
-            printf("%c" , newcoord[0]);
-            for(int i = 0 ; i < 10 ; i++){
-                
-                if(i = 9){
-                    newcoord[1] = '1';
-                    newcoord[2] = '0';
-                    fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
-                }else{
-                    newcoord[1] = i+1;
-                    fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
-
-                }
-
-            }
-        }else{
-            printf("Invalid coordinates. You lose your turn.");
-            player->AllowedTorpedo = 0;
-            player->AllowedArtilery = 0;
-            return;
+        for(int i = 0; i < 10; i++) {
+            artilleryHelper(oppGrid, carrier, battleship, destroyer, submarine, player , mode, i, y);
         }
     }
 }
@@ -846,7 +835,7 @@ int main() {
                 ShowAvailableMoves(Player2);
                 print_hidden_grid(GridOne, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
-                scanf_s("%s", command);
+                scanf("%s", command);
 
                 printf("\033c");    
                 printf("\033[2J");  
@@ -960,7 +949,7 @@ int main() {
                 ShowAvailableMoves(Player1);
                 print_hidden_grid(GridTwo, difficulty);//TO DO
                 printf("Enter your move (e.g.: Fire-B3) : ");
-                scanf_s("%s", command);
+                scanf("%s", command);
 
                 printf("\033c");    
                 printf("\033[2J");  
