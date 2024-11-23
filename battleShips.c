@@ -6,14 +6,14 @@
 
 #define SIZE 10
 
-static int countShip = 0;
+static int countBattleShip = 0;
 static int countDestroyer = 0;
 static int countSubmarine = 0;
 static int countCarrier = 0;
-static botHitShip[10]; // initalize to size of the ship
-static botHitDestroyer[10]; // initialize to size of the ship
-static botHitSubmarine[10]; // initialize to size of the ship
-static botHitCarrier[10]; // initialize to size of the ship
+static Coordinate botHitBattleShip[10]; // initalize to size of the ship
+static Coordinate botHitDestroyer[10]; // initialize to size of the ship
+static Coordinate botHitSubmarine[10]; // initialize to size of the ship
+static Coordinate botHitCarrier[10]; // initialize to size of the ship
 
 typedef struct 
 {
@@ -635,6 +635,14 @@ int isEmpty(Coordinate x[]) {
     }
 }
 
+int isOutOfBounds(int x, int y) {
+    if(x >= 11 || x <= -1 || y >= 11 || y <= -1) {
+        return 1; // out of bounds
+    } else {
+        return 0;
+    }
+}
+
 void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[]) {
     int x;
     int y =convertCoordinatesY(coord);
@@ -652,33 +660,95 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
     // we have to insert here first a while loop that checks if all the arrays (botHitSub, ..) are empty.
     // If not, we go to that specific array and fire there.
-    while(isEmpty(botHitShip) && isEmpty(botHitSubmarine) && isEmpty(botHitCarrier) && isEmpty(botHitDestroyer)) {
+    while(isEmpty(botHitBattleShip) && isEmpty(botHitSubmarine) && isEmpty(botHitCarrier) && isEmpty(botHitDestroyer)) {
         if(oppGrid[x][y] == 'S') {
-            oppGrid[x][y] == '*';
+            oppGrid[x][y] = '*';
             printf("Hit!");
-            Coordinate originalHitBot = {x, y, 'S', 0}; // we name the coordinate the number of countB its at currently, i dont think this how u do it but still.
-                                        // this struct coordinate will need to have an int x, int y, char 'letter of the ship', int direction.
-                                        // for int direction (-1 for left, 1 for right, -2 for down, 2 for up)
-
-            botHitSubmarine[countSubmarine] = originalHitBot; // store in botHitSub(of type coordinate, we will make a struct later) array, the coordinate that we just hit.
-                                        // countB is initialized to 0 at first globally. Therefore at index 0, we have the original hit and we can
-                                        // backtrack properly.
-                                        // To know if we hit a different ship, with a different letter, we can initalize an array for each type of ship
-                                        // hek we can back track properly and keep in mind where another ship is.
+            Coordinate originalHitBotCoord = {x, y, 'S', 0, 1};
+            botHitSubmarine[countSubmarine] = originalHitBotCoord;
             countSubmarine++;
-            // ...
+        } else if(oppGrid[x][y] == 'D') {
+            oppGrid[x][y] = '*';
+            printf("Hit!");
+            Coordinate originalHitBotCoord = {x, y, 'D', 0, 1};
+            botHitDestroyer[countDestroyer] = originalHitBotCoord;
+            countDestroyer++;
+        } else if(oppGrid[x][y] == 'C') {
+            oppGrid[x][y] = '*';
+            printf("Hit!");
+            Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
+            botHitCarrier[countCarrier] = originalHitBotCoord;
+            countCarrier++;
+        } else if(oppGrid[x][y] == 'B') {
+            oppGrid[x][y] = '*';
+            printf("Hit!");
+            Coordinate originalHitBotCoord = {x, y, 'B', 0, 1};
+            botHitBattleShip[countBattleShip] = originalHitBotCoord;
+            countBattleShip++;
         }
     }
-    // if one is not empty, we go to the ones that are and hit around them.
-    // when we fire around the original and we hit another cell of the same ship, we store it in the array of that ship at index 1 (index 0 is for original hit)
-    // and initiialize the int direction in the coordinate struct to the direction we just hit in. (-1 for left, 1 for right, -2 for down, 2 for up).
-    // if we hit another type of ship, store that coordinate in the array of that ship. (we must check first however if that array is empty in case it already has that coorindate saved)
-    // then we can carry on hitting that ship later on or it might even continue hitting that ship first, either way we will require the same number of
-    // guesses so it doesnt matter which ship gets sunk first by the bot.
-    while(!isEmpty(botHitShip)) {
+
+    while(!isEmpty(botHitBattleShip)) {
+        int x = botHitBattleShip[countBattleShip].x;
+        int y = botHitBattleShip[countBattleShip].y;
+        char letter;
+        
+        if(!isOutOfBounds(x+1, y)) {
+            if(!oppGrid[x+1][y] == '*' || !oppGrid[x+1][y] == 'o') {
+                if(oppGrid[x+1][y] == 'S' || oppGrid[x+1][y] == 'D' || oppGrid[x+1][y] == 'B' || oppGrid[x+1][y] == 'C') {
+                    letter = oppGrid[x+1][y];
+                    coord[0]++; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                    Coordinate current = {x+1, y, letter, 1, 1};
+                } else {
+                    coord[0]++; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                }
+            }
+        } else if(!isOutOfBounds(x-1, y)) {
+            if(!oppGrid[x-1][y] == '*' || !oppGrid[x-1][y] == 'o') {
+                if(oppGrid[x-1][y] == 'S' || oppGrid[x-1][y] == 'D' || oppGrid[x-1][y] == 'B' || oppGrid[x-1][y] == 'C') {
+                    letter = oppGrid[x-1][y];
+                    coord[0]--; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                    Coordinate current = {x-1, y, letter, 1, 1};
+                } else {
+                    coord[0]--; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                }
+            }
+        } else if(!isOutOfBounds(x, y+1)) {
+                if(!oppGrid[x][y+1] == '*' || !oppGrid[x][y+1] == 'o') {
+                    if (coord[2] == '\0') {
+                        coord[1]++; // check because this is Ali logic
+                        if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
+                            letter = oppGrid[x][y+1];
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                            Coordinate current = {x, y+1, letter, 1, 1};
+                        } else {
+                            coord[0]++; 
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                        }
+                    }
+                }
+            } else if(!isOutOfBounds(x, y-1)) {
+                if(!oppGrid[x][y+1] == '*' || !oppGrid[x][y+1] == 'o') {
+                        if (coord[2] == '\0') {
+                            coord[1]++; // check because this is Ali logic
+                            if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
+                                letter = oppGrid[x][y+1];
+                                fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                                Coordinate current = {x, y+1, letter, 1, 1};
+                            } else {
+                            coord[0]++; 
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                        }
+                    }
+                }
+        }
 
     }
-
+    
     while(!isEmpty(botHitSubmarine)) {
 
     }
