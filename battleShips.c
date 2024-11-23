@@ -6,6 +6,15 @@
 
 #define SIZE 10
 
+static int countShip = 0;
+static int countDestroyer = 0;
+static int countSubmarine = 0;
+static int countCarrier = 0;
+static botHitShip[10]; // initalize to size of the ship
+static botHitDestroyer[10]; // initialize to size of the ship
+static botHitSubmarine[10]; // initialize to size of the ship
+static botHitCarrier[10]; // initialize to size of the ship
+
 typedef struct 
 {
     char name[20];
@@ -24,6 +33,14 @@ typedef struct
     int AllowedArtilery;
     int AllowedTorpedo;
 } Player;
+
+typedef struct {
+    int x;
+    int y;
+    char shipLetter[1];
+    int direction;
+    int isInitialized;
+} Coordinate;
 
 void initializeGrid(char grid[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
@@ -329,8 +346,6 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
 
 void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[]) { // NEEDS TESTING 
 
-    
-    
     int x ;
     int y =convertCoordinatesY(coord);
 
@@ -610,6 +625,72 @@ int whoWins(Player  Player1, Player  Player2)
     {
         return 0;
     }
+}
+
+int isEmpty(Coordinate x[]) {
+    if(x[0].isInitialized == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[]) {
+    int x;
+    int y =convertCoordinatesY(coord);
+
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+        x = convertCoordinatesX(coord);
+    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+        x = 9;  // Since '10' corresponds to index 9 in a 0-based system
+    } else {
+        printf("Invalid coordinates. You lose your turn.");
+        Player->AllowedTorpedo = 0;
+        Player->AllowedArtilery = 0;
+        return;
+    }
+
+    // we have to insert here first a while loop that checks if all the arrays (botHitSub, ..) are empty.
+    // If not, we go to that specific array and fire there.
+    while(isEmpty(botHitShip) && isEmpty(botHitSubmarine) && isEmpty(botHitCarrier) && isEmpty(botHitDestroyer)) {
+        if(oppGrid[x][y] == 'S') {
+            oppGrid[x][y] == '*';
+            printf("Hit!");
+            Coordinate originalHitBot = {x, y, 'S', 0}; // we name the coordinate the number of countB its at currently, i dont think this how u do it but still.
+                                        // this struct coordinate will need to have an int x, int y, char 'letter of the ship', int direction.
+                                        // for int direction (-1 for left, 1 for right, -2 for down, 2 for up)
+
+            botHitSubmarine[countSubmarine] = originalHitBot; // store in botHitSub(of type coordinate, we will make a struct later) array, the coordinate that we just hit.
+                                        // countB is initialized to 0 at first globally. Therefore at index 0, we have the original hit and we can
+                                        // backtrack properly.
+                                        // To know if we hit a different ship, with a different letter, we can initalize an array for each type of ship
+                                        // hek we can back track properly and keep in mind where another ship is.
+            countSubmarine++;
+            // ...
+        }
+    }
+    // if one is not empty, we go to the ones that are and hit around them.
+    // when we fire around the original and we hit another cell of the same ship, we store it in the array of that ship at index 1 (index 0 is for original hit)
+    // and initiialize the int direction in the coordinate struct to the direction we just hit in. (-1 for left, 1 for right, -2 for down, 2 for up).
+    // if we hit another type of ship, store that coordinate in the array of that ship. (we must check first however if that array is empty in case it already has that coorindate saved)
+    // then we can carry on hitting that ship later on or it might even continue hitting that ship first, either way we will require the same number of
+    // guesses so it doesnt matter which ship gets sunk first by the bot.
+    while(!isEmpty(botHitShip)) {
+
+    }
+
+    while(!isEmpty(botHitSubmarine)) {
+
+    }
+
+    while(!isEmpty(botHitCarrier)) {
+
+    }
+    
+    while(!isEmpty(botHitDestroyer)) {
+
+    }
+
 }
 
 void ShowAvailableMoves(Player Player)
