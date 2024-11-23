@@ -513,76 +513,51 @@ int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
     return 0; 
 }
 
-int Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char target[]) {
-    if (player->AllowedTorpedo <= 0) {
-        printf("Torpedo is not unlocked yet or has already been used. You lose your turn.\n");
-        return 1; // Turn lost
-    }
+void Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char coordi[]) {
+    char newcoord[3];
+    char c = 'A';
+    if(coordi[0] >= '1' && coordi[0] <= '9'){
 
-    int hit = 0; // To track whether the torpedo hits any ship
-
-    // Validate if `target` is a column (e.g., "A") or a row (e.g., "1" to "10")
-    if (strlen(target) == 1 && target[0] >= 'A' && target[0] <= 'J') {
-        // Target is a column
-        int col = target[0] - 'A'; // Convert column letter to index
-        printf("Torpedo fired at column %c!\n", target[0]);
-
-        for (int i = 0; i < SIZE; i++) {
-            char cell = oppGrid[i][col];
-            if (cell == carrier->letter || cell == battleship->letter || cell == destroyer->letter || cell == submarine->letter) {
-                oppGrid[i][col] = '*'; // Mark hit
-                hit = 1;
-
-                // Update ship hits
-                if (cell == carrier->letter) carrier->hits++;
-                else if (cell == battleship->letter) battleship->hits++;
-                else if (cell == destroyer->letter) destroyer->hits++;
-                else if (cell == submarine->letter) submarine->hits++;
-
-                // Check if the ship is sunk
-                if (If_sunk(*carrier, player)) printf("You sunk the %s!\n", carrier->name);
-                if (If_sunk(*battleship, player)) printf("You sunk the %s!\n", battleship->name);
-                if (If_sunk(*destroyer, player)) printf("You sunk the %s!\n", destroyer->name);
-                if (If_sunk(*submarine, player)) printf("You sunk the %s!\n", submarine->name);
-            }
+        if(coordi[0] >= '1' && coordi[0] <= '9' && coordi[1] == '\0'){
+            newcoord[1] = coordi[0];
+        }else if(coordi[0] == '1' && coordi[1] == '0'){
+            newcoord[1] = coordi[0];
+            newcoord[2] = coordi[1];
+        }else{
+            printf("Invalid coordinates. You lose your turn.");
+            player->AllowedTorpedo = 0;
+            player->AllowedArtilery = 0;
+            return;
         }
-    } else if ((strlen(target) == 1 && target[0] >= '1' && target[0] <= '9') || (strlen(target) == 2 && target[0] == '1' && target[1] == '0')) {
-        // Target is a row
-        int row = atoi(target) - 1; // Convert row number to index
-        printf("Torpedo fired at row %d!\n", row + 1);
-
-        for (int j = 0; j < SIZE; j++) {
-            char cell = oppGrid[row][j];
-            if (cell == carrier->letter || cell == battleship->letter || cell == destroyer->letter || cell == submarine->letter) {
-                oppGrid[row][j] = '*'; // Mark hit
-                hit = 1;
-
-                // Update ship hits
-                if (cell == carrier->letter) carrier->hits++;
-                else if (cell == battleship->letter) battleship->hits++;
-                else if (cell == destroyer->letter) destroyer->hits++;
-                else if (cell == submarine->letter) submarine->hits++;
-
-                // Check if the ship is sunk
-                if (If_sunk(*carrier, player)) printf("You sunk the %s!\n", carrier->name);
-                if (If_sunk(*battleship, player)) printf("You sunk the %s!\n", battleship->name);
-                if (If_sunk(*destroyer, player)) printf("You sunk the %s!\n", destroyer->name);
-                if (If_sunk(*submarine, player)) printf("You sunk the %s!\n", submarine->name);
-            }
+        for(int i = 0 ; i < 10 ; i++){
+            newcoord[0] = c + i;
+            fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
         }
-    } else {
-        printf("Invalid torpedo input. You lose your turn.\n");
-        return 1; // Turn lost
-    }
+    }else{
+        int mychar = coordi[0];
+        if(mychar >= 65 && mychar <= 74){
+            newcoord[0] = coordi[0];
+            printf("%c" , newcoord[0]);
+            for(int i = 0 ; i < 10 ; i++){
+                
+                if(i = 9){
+                    newcoord[1] = '1';
+                    newcoord[2] = '0';
+                    fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
+                }else{
+                    newcoord[1] = i+1;
+                    fire(oppGrid , carrier ,battleship , destroyer , submarine , mode , newcoord , player);
 
-    if (hit) {
-        printf("Torpedo hit enemy ships!\n");
-    } else {
-        printf("Torpedo missed.\n");
-    }
+                }
 
-    player->AllowedTorpedo = 0; // Torpedo can only be used once until re-unlocked
-    return 0; // Successful turn
+            }
+        }else{
+            printf("Invalid coordinates. You lose your turn.");
+            player->AllowedTorpedo = 0;
+            player->AllowedArtilery = 0;
+            return;
+        }
+    }
 }
 
 void placeShip(char grid[SIZE][SIZE] , Ship ship){
@@ -843,7 +818,8 @@ int main() {
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
-                    coordi[0] = command[9];
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
                     Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 default:
@@ -904,7 +880,8 @@ int main() {
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
-                    coordi[0] = command[9];
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
                     Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 default:
@@ -959,7 +936,8 @@ int main() {
                     artillery(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 case 'T':
-                    coordi[0] = command[9];
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
                     Torpedo(GridOne , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player2 , difficulty , coordi);
                     break;
                 default:
@@ -1016,7 +994,8 @@ int main() {
                     artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 case 'T':
-                    coordi[0] = command[9];
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
                     Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
                     break;
                 default:
