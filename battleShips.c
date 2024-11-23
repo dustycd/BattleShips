@@ -692,7 +692,8 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         int x = botHitBattleShip[countBattleShip].x;
         int y = botHitBattleShip[countBattleShip].y;
         char letter;
-        
+        //we need to check if oppgrid at x and y is water if it is we have to back track
+        //we were thinking about if we need to back track we delete all the components in the array except the original hit so at index 0
         if(!isOutOfBounds(x+1, y)) {
             if(!oppGrid[x+1][y] == '*' || !oppGrid[x+1][y] == 'o') {
                 if(oppGrid[x+1][y] == 'S' || oppGrid[x+1][y] == 'D' || oppGrid[x+1][y] == 'B' || oppGrid[x+1][y] == 'C') {
@@ -700,6 +701,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
                     Coordinate current = {x+1, y, letter, 1, 1};
+                    //we have to store coordinates current in the array
                 } else {
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
@@ -712,6 +714,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
                     Coordinate current = {x-1, y, letter, 1, 1};
+                    //we have to store coordinates current in the array
                 } else {
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
@@ -725,6 +728,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                             letter = oppGrid[x][y+1];
                             fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
                             Coordinate current = {x, y+1, letter, 1, 1};
+                            //we have to store coordinates current in the array
                         } else {
                             coord[0]++; 
                             fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
@@ -733,28 +737,92 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                 }
             } else if(!isOutOfBounds(x, y-1)) {
                 if(!oppGrid[x][y+1] == '*' || !oppGrid[x][y+1] == 'o') {
-                        if (coord[2] == '\0') {
-                            coord[1]++; // check because this is Ali logic
+                        if (coord[1] == '1' && coord[2] == '0')//ex A10 
+                        {
+                            coord[1] = 9;
+                            coord[2] = '\0';
                             if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                                 letter = oppGrid[x][y+1];
                                 fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
                                 Coordinate current = {x, y+1, letter, 1, 1};
+                                //we have to store coordinates current in the array
                             } else {
                             coord[0]++; 
                             fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
                         }
                     }
                 }
-        }
-
+            }
     }
     
     while(!isEmpty(botHitSubmarine)) {
-
+        int x = botHitSubmarine[countSubmarine].x;
+        int y = botHitSubmarine[countSubmarine].y;
+        char letter;
+        
+        if(!isOutOfBounds(x+1, y)) {
+            if(!oppGrid[x+1][y] == '*' || !oppGrid[x+1][y] == 'o') {
+                if(oppGrid[x+1][y] == 'S' || oppGrid[x+1][y] == 'D' || oppGrid[x+1][y] == 'B' || oppGrid[x+1][y] == 'C') {
+                    letter = oppGrid[x+1][y];
+                    coord[0]++; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                    Coordinate current = {x+1, y, letter, 1, 1}; 
+                    //we have to store coordinates current in the array
+                } else {
+                    coord[0]++; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                }
+            }
+        } else if(!isOutOfBounds(x-1, y)) {
+            if(!oppGrid[x-1][y] == '*' || !oppGrid[x-1][y] == 'o') {
+                if(oppGrid[x-1][y] == 'S' || oppGrid[x-1][y] == 'D' || oppGrid[x-1][y] == 'B' || oppGrid[x-1][y] == 'C') {
+                    letter = oppGrid[x-1][y];
+                    coord[0]--; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                    Coordinate current = {x-1, y, letter, 1, 1};
+                    //we have to store coordinates current in the array
+                } else {
+                    coord[0]--; // if this causes error, make new coordinate array
+                    fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                }
+            }
+        } else if(!isOutOfBounds(x, y+1)) {
+                if(!oppGrid[x][y+1] == '*' || !oppGrid[x][y+1] == 'o') {
+                    if (coord[2] == '\0') {
+                        coord[1]++; // check because this is Ali logic
+                        if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
+                            letter = oppGrid[x][y+1];
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                            Coordinate current = {x, y+1, letter, 1, 1};
+                            //we have to store coordinates current in the array
+                        } else {
+                            coord[0]++; 
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                        }
+                    }
+                }
+            } else if(!isOutOfBounds(x, y-1)) {
+                if(!oppGrid[x][y+1] == '*' || !oppGrid[x][y+1] == 'o') {
+                        if (coord[1] == '1' && coord[2] == '0')//ex A10 
+                        {
+                            coord[1] = 9;
+                            coord[2] = '\0';
+                            if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
+                                letter = oppGrid[x][y+1];
+                                fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                                Coordinate current = {x, y+1, letter, 1, 1};
+                                //we have to store coordinates current in the array
+                            } else {
+                            coord[0]++; 
+                            fire(oppGrid[SIZE][SIZE], Carrier, Battleship, Destroyer, Submarine, Player, mode , coord);
+                        }
+                    }
+                }
+            }
     }
 
     while(!isEmpty(botHitCarrier)) {
-
+        
     }
     
     while(!isEmpty(botHitDestroyer)) {
