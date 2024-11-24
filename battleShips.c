@@ -5,6 +5,7 @@
 #include <time.h>
 
 #define SIZE 10
+double probabilityGrid[SIZE][SIZE];
 
 typedef struct 
 {
@@ -1136,6 +1137,55 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         }
                     }
             }
+    }
+
+}
+
+void updateProbabilityGrid(char grid[SIZE][SIZE], Ship ships[], int numShips) {
+    
+    for (int i = 0; i < SIZE; i++) { // initialize to 0 everytime
+        for (int j = 0; j < SIZE; j++) {
+            probabilityGrid[i][j] = 0.0;
+        }
+    }
+
+    for (int k = 0; k < numShips; k++) {
+        Ship ship = ships[k];
+        if (ship.hits < ship.size) { // Ship is not sunk
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (grid[i][j] == '~') { // Unhit water
+                        // Check horizontal fit
+                        int fitsHorizontally = 1;
+                        for (int l = 0; l < ship.size; l++) {
+                            if (j + l >= SIZE || grid[i][j + l] != '~') {
+                                fitsHorizontally = 0;
+                                break;
+                            }
+                        }
+                        if (fitsHorizontally) {
+                            for (int l = 0; l < ship.size; l++) {
+                                probabilityGrid[i][j + l] += 1.0;
+                            }
+                        }
+
+                        // Check vertical fit
+                        int fitsVertically = 1;
+                        for (int l = 0; l < ship.size; l++) {
+                            if (i + l >= SIZE || grid[i + l][j] != '~') {
+                                fitsVertically = 0;
+                                break;
+                            }
+                        }
+                        if (fitsVertically) {
+                            for (int l = 0; l < ship.size; l++) {
+                                probabilityGrid[i + l][j] += 1.0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
