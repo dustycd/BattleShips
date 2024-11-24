@@ -1187,7 +1187,41 @@ void updateProbabilityGrid(char grid[SIZE][SIZE], Ship ships[], int numShips) {
             }
         }
     }
+}
 
+void findBestTarget(int *bestX, int *bestY) {
+    double maxProbability = -1.0;
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (probabilityGrid[i][j] > maxProbability) {
+                maxProbability = probabilityGrid[i][j];
+                *bestX = i;
+                *bestY = j;
+            }
+        }
+    }
+}
+
+void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode) {
+
+    updateProbabilityGrid(grid, ships, numShips);
+
+    int bestX;
+    int bestY;
+    findBestTarget(&bestX, &bestY);
+
+    char coord[3];
+    coord[0] = 'A' + bestY;
+    coord[1] = '1' + bestX;
+    if (bestX == 9) { // Handle row 10
+        coord[2] = '0';
+    } else {
+        coord[2] = '\0';
+    }
+
+    botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, (Coordinate){0});
+    
 }
 
 void ShowAvailableMoves(Player Player)
