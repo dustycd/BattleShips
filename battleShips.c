@@ -655,7 +655,7 @@ int isOutOfBounds(int x, int y) {
 }
 
 
-void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[] , Coordinate current) {
+void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[] , Coordinate *current) {
     //Coordinate current has to be initialized in main as default or empty so we can use it here
     int x;
     int y =convertCoordinatesY(coord);
@@ -708,11 +708,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
         //we need to check if our current is or miss or hit 
         //if its hit it will continue normally but if its miss what we have to do is that we return at index 0
-        int h = current.x;
-        int i = current.y;
+        int h = current->x;
+        int i = current->y;
         if(oppGrid[h][i] == 'o'){
-            current.x = botHitBattleShip[0].x;
-            current.y = botHitBattleShip[0].y;
+            current->x = botHitBattleShip[0].x;
+            current->y = botHitBattleShip[0].y;
         }
 
         //we need to check if oppgrid at x and y is water if it is we have to back track
@@ -723,18 +723,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x+1][y];
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1; //to the right
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1; //to the right
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1;
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1;
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x-1, y)) {
@@ -743,18 +743,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x-1][y];
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1; //to the left
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1; //to the left
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1;
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1;
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x, y+1)) {
@@ -769,17 +769,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                             letter = oppGrid[x][y+1];
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                             //we have to store coordinates current in the array
                         } else {
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                         }
                     
                 }
@@ -796,17 +796,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                             if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                                 letter = oppGrid[x][y-1];
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                                 //we have to store coordinates current in the array
                             } else {
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                         }
                     }
             }
@@ -819,11 +819,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
         //we need to check if our current is or miss or hit 
         //if its hit it will continue normally but if its miss what we have to do is that we return at index 0
-        int h = current.x;
-        int i = current.y;
+        int h = current->x;
+        int i = current->y;
         if(oppGrid[h][i] == 'o'){
-            current.x = botHitSubmarine[0].x;
-            current.y = botHitSubmarine[0].y;
+            current->x = botHitSubmarine[0].x;
+            current->y = botHitSubmarine[0].y;
         }
 
         //we need to check if oppgrid at x and y is water if it is we have to back track
@@ -834,18 +834,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x+1][y];
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1; //to the right
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1; //to the right
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1;
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1;
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x-1, y)) {
@@ -854,18 +854,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x-1][y];
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1; //to the left
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1; //to the left
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1;
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1;
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x, y+1)) {
@@ -880,17 +880,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                             letter = oppGrid[x][y+1];
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                             //we have to store coordinates current in the array
                         } else {
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                         }
                     
                 }
@@ -907,17 +907,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                             if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                                 letter = oppGrid[x][y-1];
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                                 //we have to store coordinates current in the array
                             } else {
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                         }
                     }
             }
@@ -930,11 +930,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
         //we need to check if our current is or miss or hit 
         //if its hit it will continue normally but if its miss what we have to do is that we return at index 0
-        int h = current.x;
-        int i = current.y;
+        int h = current->x;
+        int i = current->y;
         if(oppGrid[h][i] == 'o'){
-            current.x = botHitCarrier[0].x;
-            current.y = botHitCarrier[0].y;
+            current->x = botHitCarrier[0].x;
+            current->y = botHitCarrier[0].y;
         }
 
         //we need to check if oppgrid at x and y is water if it is we have to back track
@@ -945,18 +945,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x+1][y];
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1; //to the right
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1; //to the right
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1;
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1;
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x-1, y)) {
@@ -965,18 +965,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x-1][y];
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1; //to the left
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1; //to the left
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1;
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1;
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x, y+1)) {
@@ -991,17 +991,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                             letter = oppGrid[x][y+1];
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                             //we have to store coordinates current in the array
                         } else {
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                         }
                     
                 }
@@ -1018,17 +1018,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                             if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                                 letter = oppGrid[x][y-1];
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                                 //we have to store coordinates current in the array
                             } else {
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                         }
                     }
             }
@@ -1041,11 +1041,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
         //we need to check if our current is or miss or hit 
         //if its hit it will continue normally but if its miss what we have to do is that we return at index 0
-        int h = current.x;
-        int i = current.y;
+        int h = current->x;
+        int i = current->y;
         if(oppGrid[h][i] == 'o'){
-            current.x = botHitDestroyer[0].x;
-            current.y = botHitDestroyer[0].y;
+            current->x = botHitDestroyer[0].x;
+            current->y = botHitDestroyer[0].y;
         }
 
         //we need to check if oppgrid at x and y is water if it is we have to back track
@@ -1056,18 +1056,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x+1][y];
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1; //to the right
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1; //to the right
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]++; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x+1;
-                    current.shipLetter = letter;
-                    current.direction = 1;
-                    current.isInitialized = 1;
+                    current->x = x+1;
+                    current->shipLetter = letter;
+                    current->direction = 1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x-1, y)) {
@@ -1076,18 +1076,18 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     letter = oppGrid[x-1][y];
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1; //to the left
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1; //to the left
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
                     coord[0]--; // if this causes error, make new coordinate array
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                    current.x = x-1;
-                    current.shipLetter = letter;
-                    current.direction = -1;
-                    current.isInitialized = 1;
+                    current->x = x-1;
+                    current->shipLetter = letter;
+                    current->direction = -1;
+                    current->isInitialized = 1;
                 }
             }
         } else if(!isOutOfBounds(x, y+1)) {
@@ -1102,17 +1102,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                             letter = oppGrid[x][y+1];
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                             //we have to store coordinates current in the array
                         } else {
                             fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                            current.y = y+1; //to up
-                            current.shipLetter = letter;
-                            current.direction = 2;
-                            current.isInitialized = 1;
+                            current->y = y+1; //to up
+                            current->shipLetter = letter;
+                            current->direction = 2;
+                            current->isInitialized = 1;
                         }
                     
                 }
@@ -1129,17 +1129,17 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                             if(oppGrid[x][y+1] == 'S' || oppGrid[x][y+1] == 'D' || oppGrid[x][y+1] == 'B' || oppGrid[x][y+1] == 'C') {
                                 letter = oppGrid[x][y-1];
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                                 //we have to store coordinates current in the array
                             } else {
                                 fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
-                                current.y = y-1; //to down
-                                current.shipLetter = letter;
-                                current.direction = -2;
-                                current.isInitialized = 1;
+                                current->y = y-1; //to down
+                                current->shipLetter = letter;
+                                current->direction = -2;
+                                current->isInitialized = 1;
                         }
                     }
             }
@@ -1209,7 +1209,7 @@ void findBestTarget(int *bestX, int *bestY) {
     }
 }
 
-void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode) {
+void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
 
     updateProbabilityGrid(grid, ships, numShips);
 
@@ -1226,7 +1226,7 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
         coord[2] = '\0';
     }
 
-    botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, (Coordinate){0});
+    botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
     
 }
 
@@ -1240,7 +1240,7 @@ void ShowAvailableMoves(Player Player)
     printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
 
-void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode){
+void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current){
     int numships = Player1->numShips;
     switch (difficulty)
     {
@@ -1251,7 +1251,7 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
         /* code */
         break;
     case 3:
-        HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode);
+        HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current);
         break;
     case 4:
         /* code */
@@ -1290,7 +1290,7 @@ int main() {
     if(howtoplay == 1){
 
 
-        Coordinate current; //should be initialized
+        Coordinate current ={0, 0, 'X', 0, 0}; //should be initialized
         int difficulty;
         char p1[20];
         char ftp[10], stp[10]; /*ftp = first to play and stp = second to play*/
@@ -1435,7 +1435,7 @@ int main() {
     char coordi[3];
     int ifwon = 0;
     int wonthegame;
-    while (!ifwon){
+    while (ifwon ==0){
             printf("\nits %s's turn to play!",ftp);
             if(firstPlayer == 0){
                 ShowAvailableMoves(Player1);
@@ -1499,22 +1499,21 @@ int main() {
                     
                 printf("its %s's turn to play!",stp);
 
-                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty);
+                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current);
 
                 
-                    wonthegame = whoWins(Player1 , CPU);
-                    if(wonthegame == 1){
-                            printf("%s won the game!!!", Player1.name);
-                            ifwon =1;
-                            break;
-                        }else if(wonthegame == 2){
-                            printf("%s won the game!!!", CPU.name);
-                            ifwon =1;
-                            break;
-                        }
-                    
+                wonthegame = whoWins(Player1 , CPU);
+                if(wonthegame == 1){
+                        printf("%s won the game!!!", Player1.name);
+                        ifwon =1;
+                        break;
+                    }else if(wonthegame == 2){
+                        printf("%s won the game!!!", CPU.name);
+                        ifwon =1;
+                        break;
+                    }
                 }else  if(firstPlayer == 1){
-                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty);
+                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current);
 
                     wonthegame = whoWins(Player1 , CPU);
                     if(wonthegame == 1){
