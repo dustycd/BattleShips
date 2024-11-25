@@ -1234,6 +1234,28 @@ void ShowAvailableMoves(Player Player)
     printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
 
+void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode){
+    int numships = Player1->numShips;
+    switch (difficulty)
+    {
+    case 1:
+        /* code */
+        break;
+    case 2:
+        /* code */
+        break;
+    case 3:
+        HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode);
+        break;
+    case 4:
+        /* code */
+        break;
+
+    default:
+        break;
+    }   
+}
+
 int main() {
     int rows = SIZE;
     int columns = SIZE;
@@ -1245,9 +1267,322 @@ int main() {
     Ship P2Battleship= {"Battleship", 4, 0,'B'};       
     Ship P2Destroyer= {"Destroyer", 3, 0,'D'};
     Ship P2Submarine= {"Submarine", 2, 0,'S'};
+    Ship BotCarrier= {"Carrier", 5, 0,'C'};     
+    Ship BotBattleship= {"Battleship", 4, 0,'B'};       
+    Ship BotDestroyer= {"Destroyer", 3, 0,'D'};
+    Ship BotSubmarine= {"Submarine", 2, 0,'S'};
+
     char GridOne[SIZE][SIZE] = {'~'};
     char GridTwo[SIZE][SIZE] = {'~'};
 
+
+    //ask if single player or multiplayer
+    int howtoplay;
+    printf("Choose : SinglePlayer(1)   OR    MultiPlayer(2): ");
+    scanf("%d" , &howtoplay);
+    puts("\n");
+    if(howtoplay == 1){
+
+
+        Coordinate current; //should be initialized
+        int difficulty;
+        char p1[20];
+        char ftp[10], stp[10]; /*ftp = first to play and stp = second to play*/
+
+        int chooselevel;
+        printf("Choose level : Easy(1)\t\tMedium(2)\t\tHard(3)\t\tImpossible(4) : ");
+        scanf("%d" , &chooselevel);
+        printf("------------------------------------------------------------------------------\n");
+
+
+        srand(time(0));
+
+        initializeGrid(GridOne); //for player 1
+        initializeGrid(GridTwo); //for bot
+
+        printf("Choose difficulty (0 for Easy, 1 for Hard): ");
+        scanf("%d", &difficulty);
+        puts("\n");
+
+        printf("Enter your name : ");
+        scanf("%s" , &p1);
+        puts("\n");
+
+        Player Player1 = { .numShips = 4, .radarSweeps = 3, .AllowedSmokeScreen = 0, . UsedSmoke = 0, .AllowedArtilery = 0, .AllowedTorpedo =0};
+        Player CPU = { .numShips = 4, .radarSweeps = 3, .AllowedSmokeScreen = 0, . UsedSmoke = 0, .AllowedArtilery = 0, .AllowedTorpedo =0};
+
+        strcpy(Player1.name, p1);
+        strcpy(CPU.name, "Bot");
+
+        Ship p1ships[] = {P1Submarine , P1Destroyer , P1Battleship , P1Carrier};
+        int firstPlayer = rand() % 2;
+        if (firstPlayer == 0) {
+            strcpy(ftp, p1);
+            strcpy(stp, "Bot");
+        } else {
+            strcpy(ftp, "Bot");
+            strcpy(stp, p1);
+        }
+
+        printf("%s will place his ships first\n", ftp);
+
+        if(firstPlayer == 0){
+        placeShip(GridOne, P1Carrier);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");   
+        fflush(stdout);
+        placeShip(GridOne, P1Battleship);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+        placeShip(GridOne, P1Destroyer);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+        placeShip(GridOne, P1Submarine);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+
+        printf("now its %s's turn to place his ships\n", stp);
+        printf("Bot placing his ships...\n");
+        Ship botShips[] = {BotCarrier, BotBattleship, BotDestroyer, BotSubmarine};
+        for (int i = 0; i < 4; i++) {
+        int placed = 0;
+        while (!placed) {
+            int x = rand() % SIZE;
+            int y = rand() % SIZE;
+            char orientation = (rand() % 2 == 0) ? 'H' : 'V';
+
+            if (isValidShipPlacement(GridTwo, x, y, botShips[i].size, orientation) == 2) {
+                if (orientation == 'H') {
+                    for (int j = 0; j < botShips[i].size; j++) {
+                        GridTwo[x][y + j] = botShips[i].letter;
+                    }
+                } else if (orientation == 'V') {
+                    for (int j = 0; j < botShips[i].size; j++) {
+                        GridTwo[x + j][y] = botShips[i].letter;
+                    }
+                }
+                placed = 1;
+                }
+            }
+        }
+        printf("Bot placed his ships.");
+
+    }else{
+        printf("Bot placing his ships...\n");
+        Ship botShips[] = {BotCarrier, BotBattleship, BotDestroyer, BotSubmarine};
+        for (int i = 0; i < 4; i++) {
+        int placed = 0;
+        while (!placed) {
+            int x = rand() % SIZE;
+            int y = rand() % SIZE;
+            char orientation = (rand() % 2 == 0) ? 'H' : 'V';
+
+            if (isValidShipPlacement(GridTwo, x, y, botShips[i].size, orientation) == 2) {
+                if (orientation == 'H') {
+                    for (int j = 0; j < botShips[i].size; j++) {
+                        GridTwo[x][y + j] = botShips[i].letter;
+                    }
+                } else if (orientation == 'V') {
+                    for (int j = 0; j < botShips[i].size; j++) {
+                        GridTwo[x + j][y] = botShips[i].letter;
+                    }
+                }
+                placed = 1;
+                }
+            }
+        }
+        printf("Bot placed his ships.\n\n");
+
+        printf("now its %s's turn to place his ships\n", stp);
+
+        placeShip(GridOne, P1Carrier);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+        placeShip(GridOne, P1Battleship);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+        placeShip(GridOne, P1Destroyer);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+        placeShip(GridOne, P1Submarine);
+        printf("\033c");    
+        printf("\033[2J");  
+        printf("\033[H");  
+        fflush(stdout);
+    }
+
+
+    char command[20];
+    char coordi[3];
+    int ifwon = 0;
+    int wonthegame;
+    while (!ifwon){
+            printf("\nits %s's turn to play!",ftp);
+            if(firstPlayer == 0){
+                ShowAvailableMoves(Player1);
+                print_hidden_grid(GridTwo, difficulty);//TO DO
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf("%s", command);
+                wonthegame = whoWins(Player1 , CPU);
+                
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H");  
+                fflush(stdout);
+
+                switch (command[0])
+                {
+                case 'F':
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi , &Player1);
+                    break;
+                case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
+                    Radar_Sweep(GridTwo , coordi , &Player1);
+                    break;
+                case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
+                    SmokeScreen(GridOne , &Player1 ,coordi);
+                    break;
+                case 'A':
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    break;
+                case 'T':
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
+                    Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    break;
+                default:
+                    break;
+                    }
+                    wonthegame = whoWins(Player1 , CPU);
+                    if(wonthegame == 1)
+                    {
+                        printf("%s won the game!!!", Player1.name);
+                        ifwon =1;
+                        break;
+                    }
+                    else if(wonthegame ==2)
+                    {
+                        printf("%s won the game!!!", CPU.name);
+                        ifwon=1;
+                        break;
+                    }
+                    
+                printf("its %s's turn to play!",stp);
+
+                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty);
+
+                
+                    wonthegame = whoWins(Player1 , CPU);
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", CPU.name);
+                            ifwon =1;
+                            break;
+                        }
+                    
+                }else  if(firstPlayer == 1){
+                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty);
+
+                    wonthegame = whoWins(Player1 , CPU);
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", CPU.name);
+                            ifwon =1;
+                            break;
+                        }
+
+
+                printf("its %s's turn to play!",stp);
+
+                ShowAvailableMoves(Player1);
+                print_hidden_grid(GridTwo, difficulty);//TO DO
+                printf("Enter your move (e.g.: Fire-B3) : ");
+                scanf("%s", command);
+
+                printf("\033c");    
+                printf("\033[2J");  
+                printf("\033[H"); 
+                fflush(stdout);
+
+                switch (command[0])
+                {
+                case 'F':
+                    coordi[0] = command[5];
+                    coordi[1] = command[6];
+                    coordi[2] = command[7];
+                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
+                    break;
+                case 'R':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
+                    Radar_Sweep(GridTwo , coordi , &Player1);
+                    break;
+                case 'S':
+                    coordi[0] = command[6];
+                    coordi[1] = command[7];
+                    coordi[2] = command[8];
+                    SmokeScreen(GridOne , &Player1 ,coordi);
+                    break;
+                case 'A':
+                    coordi[0] = command[10];
+                    coordi[1] = command[11];
+                    coordi[2] = command[12];
+                    artillery(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    break;
+                case 'T':
+                    coordi[0] = command[8];
+                    coordi[1] = command[9];
+                    Torpedo(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , &Player1 , difficulty , coordi);
+                    break;
+                default:
+                    break;
+                    }
+                    wonthegame = whoWins(Player1 , CPU);
+                    if(wonthegame == 1){
+                            printf("%s won the game!!!", Player1.name);
+                            ifwon =1;
+                            break;
+                        }else if(wonthegame == 2){
+                            printf("%s won the game!!!", CPU.name);
+                            ifwon=1;
+                            break;
+                        }  
+        }
+
+    }
+    }else if(howtoplay == 2){
+    
     int difficulty; 
     char player1[20], player2[20];
     char ftp[10], stp[10]; /*ftp = first to play and stp = second to play*/
@@ -1615,7 +1950,7 @@ int main() {
         }
 
     }
-    
+    }
     return 0;
 }
 
