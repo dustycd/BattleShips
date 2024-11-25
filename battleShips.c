@@ -440,10 +440,16 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 }
             }
             else if(mode == 0){ // else missed easy
-                oppGrid[i][j] = 'o';
-                printf("Miss!\n");
-                Player->AllowedTorpedo = 0;
-                Player->AllowedArtilery = 0;
+                if (oppGrid[i][j] != '*') {
+                    oppGrid[i][j] = 'o';
+                    printf("Miss!\n");
+                    Player->AllowedTorpedo = 0;
+                    Player->AllowedArtilery = 0;
+                } else {
+                    printf("Already Hit!\n");
+                    Player->AllowedTorpedo = 0;
+                    Player->AllowedArtilery = 0;
+                }
             }
             else {
                 printf("Miss!\n");
