@@ -1236,15 +1236,22 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
     int bestY;
     findBestTarget(&bestX, &bestY);
     printf("found the best target by calling the function\n");
-
+    printf("Best Y: %d" , bestY);
+    printf("Best X: %d" , bestX);
     char coord[3];
     coord[0] = 'A' + bestY;
     coord[1] = '1' + bestX;
     if (bestX == 9) { // Handle row 10
+        coord[1] = '1';
         coord[2] = '0';
     } else {
         coord[2] = '\0';
     }
+
+    printf("%c", coord[0]);
+    printf("%c", coord[1]);
+    printf("%c", coord[2]);
+
 
     botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
     printf("Bot fire call done\n");
