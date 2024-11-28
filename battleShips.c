@@ -464,12 +464,12 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
     }
 }
 
-int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
+int Radar_Sweep(char oppGrid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], char coord[], Player* Player)
 {
-    int found =0;
+    int found = 0;
     int x = convertCoordinatesX(coord);
     int y = convertCoordinatesY(coord);
-
+    
     if (coord[1] >= '0' && coord[1] <= '9' && coord[2] == '\0') { //"B3"
         y = convertCoordinatesY(coord);
     } else if (coord[1] == '1' && coord[2] == '0') { //"A10"
@@ -481,40 +481,39 @@ int Radar_Sweep(char oppGrid[SIZE][SIZE],char coord[], Player* Player)
         return 0;
     }
 
-
-    if(Player->radarSweeps == 0)
-    {
+    if (Player->radarSweeps == 0) {
         printf("No radar sweeps left. You lose your turn.\n");
         Player->AllowedTorpedo = 0;
         Player->AllowedArtilery = 0;
         return 1;
     }
-    for(int i=x; i<(x+3); i++)
-    {
-        for(int j=y; j<(y+3); j++)
-        {
-            if(oppGrid[i][j] != 'o' && oppGrid[i][j] != '*' && oppGrid[i][j] != '~')
-            {
-                found =1;
+
+    for (int i = x; i < x + 3 && i < SIZE; i++) {
+        for (int j = y; j < y + 3 && j < SIZE; j++) {
+            // Skip cells with smoke screens or empty water
+            if (smokeGrid[i][j] == 1 || oppGrid[i][j] == '~') {
+                continue;
+            }
+            if (oppGrid[i][j] != 'o' && oppGrid[i][j] != '*' && oppGrid[i][j] != '~') {
+                found = 1;
                 break;
             }
         }
     }
-    if(found == 1)
-    {
-        printf("Enemy Ships Found.");
+
+    if (found == 1) {
+        printf("Enemy Ships Found.\n");
         Player->radarSweeps--;
+    } else {
+        printf("No enemy ships found.\n");
     }
-    else
-    {
-        printf("No enemy ships found");
-    }
+
     Player->AllowedTorpedo = 0;
     Player->AllowedArtilery = 0;
     return 0;
 }
 
-int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
+int SmokeScreen(char grid[SIZE][SIZE], int smokeGrid[SIZE][SIZE], Player *player, char coord[]) {
     if (player->UsedSmoke >= player->AllowedSmokeScreen) {
         printf("No smoke screens left. You lose your turn.\n");
         return 1; // Turn lost
@@ -522,22 +521,20 @@ int SmokeScreen(char grid[SIZE][SIZE], Player *player, char coord[]) {
 
     int x = convertCoordinatesX(coord);
     int y = convertCoordinatesY(coord);
-    if (x == -1 || y < 0 || y >= SIZE) {
+    if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) {
         printf("Invalid coordinates for smoke screen. You lose your turn.\n");
         return 1; // Turn lost
     }
 
     for (int i = x; i <= x + 1 && i < SIZE; i++) {
         for (int j = y; j <= y + 1 && j < SIZE; j++) {
-            grid[i][j] = 'x'; // Mark cell as obscured
+            smokeGrid[i][j] = 1; // Mark cell as having an active smoke screen
         }
     }
 
     printf("Smoke screen deployed at %c%d!\n", y + 'A', x + 1);
     player->UsedSmoke++;
-    // Clear screen to preserve secrecy
-    system("clear"); // For UNIX-based systems; use "cls" for Windows
-    return 0; 
+    return 0;
 }
 
 void Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *destroyer, Ship *submarine, Player *player, int mode, char coordi[]) {
