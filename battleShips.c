@@ -6,6 +6,7 @@
 
 #define SIZE 10
 double probabilityGrid[SIZE][SIZE];
+char probabilityGridOpp[SIZE][SIZE];
 
 typedef struct 
 {
@@ -186,6 +187,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
 
         if(oppGrid[x][y] == 'S') { //submarine
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             Submarine->hits++;
             printf("Hit!\n");
             if (If_sunk(*Submarine, Player)) {
@@ -202,6 +204,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
          else if(oppGrid[x][y] == 'C') { //carrier
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             Carrier->hits++;
             printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
@@ -218,6 +221,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
         else if(oppGrid[x][y] == 'D') { // destroyer
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             Destroyer->hits++;
             printf("Hit!\n");
             if (If_sunk(*Destroyer, Player)) {
@@ -234,6 +238,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
         else if(oppGrid[x][y] == 'B') { // battleship
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             Battleship->hits++;
             printf("Hit!\n");
             if (If_sunk(*Battleship, Player)) {
@@ -254,6 +259,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
         else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
             oppGrid[x][y] = 'o';
+            probabilityGridOpp[x][y] = 'o';
             printf("Miss!\n");
             Player->AllowedTorpedo = 0;
             Player->AllowedArtilery = 0;
@@ -681,41 +687,46 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         printf("entered the first while loop that checks if isEmpty for everything\n");
         if(oppGrid[x][y] == 'S') {
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'S', 0, 1};
             botHitSubmarine[countSubmarine] = originalHitBotCoord;
             countSubmarine++;
-            break;
+            return;
         } else if(oppGrid[x][y] == 'D') {
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'D', 0, 1};
             botHitDestroyer[countDestroyer] = originalHitBotCoord;
             countDestroyer++;
-            break;
+            return;
         } else if(oppGrid[x][y] == 'C') {
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
             botHitCarrier[countCarrier] = originalHitBotCoord;
             countCarrier++;
-            break;
+            return;
         } else if(oppGrid[x][y] == 'B') {
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'B', 0, 1};
             botHitBattleShip[countBattleShip] = originalHitBotCoord;
             countBattleShip++;
-            break;
+            return;
         }else{
              oppGrid[x][y] = 'o';
+             probabilityGridOpp[x][y] = 'o';
              printf("Miss!");
-             break;
+             return;
 
         }
     }
 
-    while(!isEmpty(botHitBattleShip) && If_sunk(*Battleship , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitBattleShip) && If_sunk(*Battleship , Player) == 0) { //if didnt sink
         printf("entered battleship while loop\n");
         int x = botHitBattleShip[countBattleShip].x;
         int y = botHitBattleShip[countBattleShip].y;
@@ -827,7 +838,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             }
     }
     
-    while(!isEmpty(botHitSubmarine) && If_sunk(*Submarine , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitSubmarine) && If_sunk(*Submarine , Player) == 0) { //if didnt sink
         printf("entered submarine while loop\n");
         int x = botHitSubmarine[countSubmarine].x;
         int y = botHitSubmarine[countSubmarine].y;
@@ -939,7 +950,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             }
     }
 
-    while(!isEmpty(botHitCarrier) && If_sunk(*Carrier , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitCarrier) && If_sunk(*Carrier , Player) == 0) { //if didnt sink
         printf("entered carrier while loop\n");
         int x = botHitCarrier[countCarrier].x;
         int y = botHitCarrier[countCarrier].y;
@@ -1051,7 +1062,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             }
     }
     
-    while(!isEmpty(botHitDestroyer) && If_sunk(*Destroyer , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitDestroyer) && If_sunk(*Destroyer , Player) == 0) { //if didnt sink
         printf("entered destroyer while loop\n");
         int x = botHitDestroyer[countDestroyer].x;
         int y = botHitDestroyer[countDestroyer].y;
@@ -1165,7 +1176,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
 }
 
-void updateProbabilityGrid(char grid[SIZE][SIZE], Ship ships[], int numShips) {
+void updateProbabilityGrid(Ship ships[], int numShips) {
     
     for (int i = 0; i < SIZE; i++) { // initialize to 0 everytime
         for (int j = 0; j < SIZE; j++) {
@@ -1178,11 +1189,11 @@ void updateProbabilityGrid(char grid[SIZE][SIZE], Ship ships[], int numShips) {
         if (ship.hits < ship.size) { // Ship is not sunk
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {
-                    if (grid[i][j] == '~' || grid[i][j] == 'C' || grid[i][j] == 'D' || grid[i][j] == 'S' || grid[i][j] == 'B') { // Unhit water
+                    if (probabilityGridOpp[i][j] == '~') { // Unhit water
                         // Check horizontal fit
                         int fitsHorizontally = 1;
                         for (int l = 0; l < ship.size; l++) {
-                            if (j + l >= SIZE || grid[i][j + l] != '~') {
+                            if (j + l >= SIZE || probabilityGridOpp[i][j + l] != '~') {
                                 fitsHorizontally = 0;
                                 break;
                             }
@@ -1196,7 +1207,7 @@ void updateProbabilityGrid(char grid[SIZE][SIZE], Ship ships[], int numShips) {
                         // Check vertical fit
                         int fitsVertically = 1;
                         for (int l = 0; l < ship.size; l++) {
-                            if (i + l >= SIZE || grid[i + l][j] != '~') {
+                            if (i + l >= SIZE || probabilityGridOpp[i + l][j] != '~') {
                                 fitsVertically = 0;
                                 break;
                             }
@@ -1227,9 +1238,20 @@ void findBestTarget(int *bestX, int *bestY) {
     }
 }
 
+// void debugPrintProbabilityGrid() {
+//     printf("Current Probability Grid:\n");
+//     for (int i = 0; i < SIZE; i++) {
+//         for (int j = 0; j < SIZE; j++) {
+//             printf("%.2f ", probabilityGrid[i][j]);
+//         }
+//         printf("\n");
+//     }
+// }
+
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
     printf("entered hard mde\n");
-    updateProbabilityGrid(grid, ships, numShips);
+    updateProbabilityGrid(ships, numShips);
+    // debugPrintProbabilityGrid();
     printf("updated the probality grid by using the function\n");
 
     int bestX;
@@ -1311,6 +1333,7 @@ int main() {
 
     char GridOne[SIZE][SIZE] = {'~'};
     char GridTwo[SIZE][SIZE] = {'~'};
+    initializeGrid(probabilityGridOpp);
 
 
     //ask if single player or multiplayer
