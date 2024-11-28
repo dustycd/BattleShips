@@ -168,6 +168,7 @@ int If_sunk(Ship Ship, Player * Player)
 }
 
 void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, int mode ,char coord[], Player *Player) {
+    printf("entered the fire function\n");
 
     int x ;
     int y =convertCoordinatesY(coord);
@@ -656,6 +657,7 @@ int isOutOfBounds(int x, int y) {
 
 
 void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[] , Coordinate *current) {
+    printf("entered botfire function\n");
     //Coordinate current has to be initialized in main as default or empty so we can use it here
     int x;
     int y =convertCoordinatesY(coord);
@@ -673,35 +675,48 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
     // we have to insert here first a while loop that checks if all the arrays (botHitSub, ..) are empty.
     // If not, we go to that specific array and fire there.
+    printf("%s" , coord);
+    puts("\n");
     while(isEmpty(botHitBattleShip) && isEmpty(botHitSubmarine) && isEmpty(botHitCarrier) && isEmpty(botHitDestroyer)) {
+        printf("entered the first while loop that checks if isEmpty for everything\n");
         if(oppGrid[x][y] == 'S') {
             oppGrid[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'S', 0, 1};
             botHitSubmarine[countSubmarine] = originalHitBotCoord;
             countSubmarine++;
+            break;
         } else if(oppGrid[x][y] == 'D') {
             oppGrid[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'D', 0, 1};
             botHitDestroyer[countDestroyer] = originalHitBotCoord;
             countDestroyer++;
+            break;
         } else if(oppGrid[x][y] == 'C') {
             oppGrid[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
             botHitCarrier[countCarrier] = originalHitBotCoord;
             countCarrier++;
+            break;
         } else if(oppGrid[x][y] == 'B') {
             oppGrid[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'B', 0, 1};
             botHitBattleShip[countBattleShip] = originalHitBotCoord;
             countBattleShip++;
+            break;
+        }else{
+             oppGrid[x][y] = 'o';
+             printf("Miss!");
+             break;
+
         }
     }
 
     while(!isEmpty(botHitBattleShip) && If_sunk(*Battleship , Player) == 0) { //if didnt sink
+        printf("entered battleship while loop\n");
         int x = botHitBattleShip[countBattleShip].x;
         int y = botHitBattleShip[countBattleShip].y;
         char letter;
@@ -813,6 +828,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
     }
     
     while(!isEmpty(botHitSubmarine) && If_sunk(*Submarine , Player) == 0) { //if didnt sink
+        printf("entered submarine while loop\n");
         int x = botHitSubmarine[countSubmarine].x;
         int y = botHitSubmarine[countSubmarine].y;
         char letter;
@@ -924,6 +940,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
     }
 
     while(!isEmpty(botHitCarrier) && If_sunk(*Carrier , Player) == 0) { //if didnt sink
+        printf("entered carrier while loop\n");
         int x = botHitCarrier[countCarrier].x;
         int y = botHitCarrier[countCarrier].y;
         char letter;
@@ -1035,6 +1052,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
     }
     
     while(!isEmpty(botHitDestroyer) && If_sunk(*Destroyer , Player) == 0) { //if didnt sink
+        printf("entered destroyer while loop\n");
         int x = botHitDestroyer[countDestroyer].x;
         int y = botHitDestroyer[countDestroyer].y;
         char letter;
@@ -1210,12 +1228,14 @@ void findBestTarget(int *bestX, int *bestY) {
 }
 
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
-
+    printf("entered hard mde\n");
     updateProbabilityGrid(grid, ships, numShips);
+    printf("updated the probality grid by using the function\n");
 
     int bestX;
     int bestY;
     findBestTarget(&bestX, &bestY);
+    printf("found the best target by calling the function\n");
 
     char coord[3];
     coord[0] = 'A' + bestY;
@@ -1227,6 +1247,7 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
     }
 
     botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+    printf("Bot fire call done\n");
     
 }
 
@@ -1241,6 +1262,7 @@ void ShowAvailableMoves(Player Player)
 }
 
 void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current){
+    printf("entered play game function\n");
     int numships = Player1->numShips;
     switch (difficulty)
     {
@@ -1251,7 +1273,9 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
         /* code */
         break;
     case 3:
+    printf("entered case 3 in switch\n");
         HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current);
+        printf("finished hardmode\n");
         break;
     case 4:
         /* code */
@@ -1498,7 +1522,7 @@ int main() {
                     }
                     
                 printf("its %s's turn to play!",stp);
-
+                printf("Before play game call\n");
                 PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current);
 
                 
@@ -1513,6 +1537,7 @@ int main() {
                         break;
                     }
                 }else  if(firstPlayer == 1){
+                    printf("Before play game call\n");
                     PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current);
 
                     wonthegame = whoWins(Player1 , CPU);
