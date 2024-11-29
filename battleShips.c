@@ -708,6 +708,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             oppGrid[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
+            current->x = x;
+            current->y = y;
+            current->shipLetter = 'C';
+            current->direction = 0 ;
+            current->isInitialized = 1;
             botHitCarrier[countCarrier] = originalHitBotCoord;
             countCarrier++;
             return;
@@ -976,10 +981,11 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         }
         coord[0] = intToChar(y);
         if(x == 9) {
-            coord[1]= 1;
-            coord[2] = 0;
+            
+            coord[1]= '1';
+            coord[2] = '0';
         } else {
-            coord[1] = x+1;
+            coord[1] = x + '1' ;
             coord[2] = '\0';
         }
         //we need to check if oppgrid at x and y is water if it is we have to back track
@@ -992,16 +998,27 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     //its not entering this if statement its not checking right
                     printf("checked of which type of ship it is\n");
                     letter = oppGrid[x+1][y];
+                    printf("COORD 0:%c\n" , coord[0]);
+                    printf("COORD 1:%c\n" , coord[1]);
+                    printf("COORD 2:%c\n" , coord[2]);
                     coord[0]++; // if this causes error, make new coordinate array
                     //when checking the coordinates it not taking it from the current but from the highest in the probability grid and its adding to it
+                    printf("COORD 0:%c\n" , coord[0]);
+                    printf("COORD 1:%c\n" , coord[1]);
+                    printf("COORD 2:%c\n" , coord[2]);
+                    puts("");
                     printf("before using the fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
                     printf("after using the fire function\n");
-
+                    printf("%d", current->x);
+                    printf("%d\n", current->y);
                     current->x = x+1; //to the right
+                    current->y = y;
                     current->shipLetter = letter;
                     current->direction = 1;
                     current->isInitialized = 1;
+                    printf("%d", current->x);
+                    printf("%d\n", current->y);
                     //we have to store coordinates current in the array
                 } else {
                     printf("in case its not a ship its water\n");
@@ -1016,6 +1033,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     printf("%d", current->x);
                     printf("%d\n", current->y);
                     current->x = x+1;
+                    current->y = y;
                     current->shipLetter = letter;
                     current->direction = 1;
                     current->isInitialized = 1;
