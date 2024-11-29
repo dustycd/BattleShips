@@ -1304,6 +1304,67 @@ void debugPrintProbabilityGrid() {
         printf("\n");
     }
 }
+int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current, int *i, int*j)
+{
+    char coord[3];
+    printf("entered medium mde\n");
+    if(If_sunk(*Carrier, Player)== 0)
+    {
+        j+=5;
+        if(j>=9)
+        {
+            i++;
+            j=0;
+        }
+        coord[0] = 'A' + j;
+        coord[1] = '1' + i;
+        botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+        return 0;
+    }
+    else if(If_sunk(*Battleship, Player)== 0)
+    {
+        j+=4;
+        if(j>=9)
+        {
+            i++;
+            j=0;
+        }
+        coord[0] = 'A' + j;
+        coord[1] = '1' + i;
+        botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+        return 0;
+    }
+    else if(If_sunk(*Destroyer, Player)== 0)
+    {
+        j+=3;
+        if(j>=9)
+        {
+            i++;
+            j=0;
+        }
+        coord[0] = 'A' + j;
+        coord[1] = '1' + i;
+        botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+        return 0;
+    }
+    else if(If_sunk(*Submarine, Player)== 0)
+    {
+        j+=2;
+        if(j>=9)
+        {
+            i++;
+            j=0;
+        }
+        coord[0] = 'A' + j;
+        coord[1] = '1' + i;
+        botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
 
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
     printf("entered hard mde\n");
