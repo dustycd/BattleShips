@@ -706,6 +706,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             return;
         } else if(oppGrid[x][y] == 'C') {
             oppGrid[x][y] = '*';
+            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
             current->x = x;
@@ -1009,6 +1010,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     puts("");
                     printf("before using the fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
+                    probabilityGridOpp[x][y+1] = '*';
                     printf("after using the fire function\n");
                     printf("%d", current->x);
                     printf("%d\n", current->y);
@@ -1029,6 +1031,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     puts("");
                     printf("before fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
+                    probabilityGrid[x][y+1] = 'o';
                     printf("after fire function\n");
                     printf("%d", current->x);
                     printf("%d\n", current->y);
@@ -1278,7 +1281,7 @@ void updateProbabilityGrid(Ship ships[], int numShips) {
     }
 }
 
-void findBestTarget(int *bestX, int *bestY) {
+void findBestTarget(int *bestX, int *bestY, Coordinate *current) {
     double maxProbability = -1.0;
 
     for (int i = 0; i < SIZE; i++) {
@@ -1290,7 +1293,6 @@ void findBestTarget(int *bestX, int *bestY) {
             }
         }
     }
-    probabilityGridOpp[*bestX][*bestY] = '*';
 }
 
 void debugPrintProbabilityGrid() {
@@ -1311,7 +1313,7 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
 
     int bestX;
     int bestY;
-    findBestTarget(&bestX, &bestY);
+    findBestTarget(&bestX, &bestY, current);
     printf("found the best target by calling the function\n");
     printf("Best Y: %d " , bestY);
     printf("Best X: %d " , bestX);
