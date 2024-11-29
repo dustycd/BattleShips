@@ -946,6 +946,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         printf("entered carrier while loop\n");
         int x = botHitCarrier[countCarrier].x;
         int y = botHitCarrier[countCarrier].y;
+        //here x and y are 0 and 0 it shouldnt be like that
+
+        printf("X: %d , Y: %d\n" , x , y);
         char letter;
 
         //we need to check if our current is or miss or hit 
@@ -960,23 +963,42 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         //we need to check if oppgrid at x and y is water if it is we have to back track
         //we were thinking about if we need to back track we delete all the components in the array except the original hit so at index 0
         if(!isOutOfBounds(x+1, y)) {
+            printf("entered out of bounds if statment\n");
             if(!(oppGrid[x+1][y] == '*') || !(oppGrid[x+1][y] == 'o')) {
+                printf("check if already hit and if hit or miss\n");
                 if(oppGrid[x+1][y] == 'S' || oppGrid[x+1][y] == 'D' || oppGrid[x+1][y] == 'B' || oppGrid[x+1][y] == 'C') {
+                    //its not entering this if statement its not checking right
+                    printf("checked of which type of ship it is\n");
                     letter = oppGrid[x+1][y];
                     coord[0]++; // if this causes error, make new coordinate array
+                    //when checking the coordinates it not taking it from the current but from the highest in the probability grid and its adding to it
+                    printf("before using the fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
+                    printf("after using the fire function\n");
+
                     current->x = x+1; //to the right
                     current->shipLetter = letter;
                     current->direction = 1;
                     current->isInitialized = 1;
                     //we have to store coordinates current in the array
                 } else {
+                    printf("in case its not a ship its water\n");
                     coord[0]++; // if this causes error, make new coordinate array
+                    printf("%c" , coord[0]);
+                    printf("%c" , coord[1]);
+                    printf("%c" , coord[2]);
+                    puts("");
+                    printf("before fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
+                    printf("after fire function\n");
+                    printf("%d", current->x);
+                    printf("%d\n", current->y);
                     current->x = x+1;
                     current->shipLetter = letter;
                     current->direction = 1;
                     current->isInitialized = 1;
+                    printf("%d", current->x);
+                    printf("%d\n", current->y);
                 }
             }
         } else if(!isOutOfBounds(x-1, y)) {
@@ -1231,20 +1253,20 @@ void findBestTarget(int *bestX, int *bestY) {
     probabilityGridOpp[*bestX][*bestY] = '*';
 }
 
-// void debugPrintProbabilityGrid() {
-//     printf("Current Probability Grid:\n");
-//     for (int i = 0; i < SIZE; i++) {
-//         for (int j = 0; j < SIZE; j++) {
-//             printf("%.2f ", probabilityGrid[i][j]);
-//         }
-//         printf("\n");
-//     }
-// }
+void debugPrintProbabilityGrid() {
+    printf("Current Probability Grid:\n");
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%.2f ", probabilityGrid[i][j]);
+        }
+        printf("\n");
+    }
+}
 
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
     printf("entered hard mde\n");
     updateProbabilityGrid(ships, numShips);
-    // debugPrintProbabilityGrid();
+    debugPrintProbabilityGrid();
     printf("updated the probality grid by using the function\n");
 
     int bestX;
