@@ -187,7 +187,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
 
         if(oppGrid[x][y] == 'S') { //submarine
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             Submarine->hits++;
             printf("Hit!\n");
             if (If_sunk(*Submarine, Player)) {
@@ -204,7 +203,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
          else if(oppGrid[x][y] == 'C') { //carrier
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             Carrier->hits++;
             printf("Hit!\n");
             if (If_sunk(*Carrier, Player)) {
@@ -238,7 +236,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
         else if(oppGrid[x][y] == 'B') { // battleship
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             Battleship->hits++;
             printf("Hit!\n");
             if (If_sunk(*Battleship, Player)) {
@@ -259,7 +256,6 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         }
         else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
             oppGrid[x][y] = 'o';
-            probabilityGridOpp[x][y] = 'o';
             printf("Miss!\n");
             Player->AllowedTorpedo = 0;
             Player->AllowedArtilery = 0;
@@ -687,7 +683,6 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         printf("entered the first while loop that checks if isEmpty for everything\n");
         if(oppGrid[x][y] == 'S') {
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'S', 0, 1};
             botHitSubmarine[countSubmarine] = originalHitBotCoord;
@@ -695,7 +690,6 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             return;
         } else if(oppGrid[x][y] == 'D') {
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'D', 0, 1};
             botHitDestroyer[countDestroyer] = originalHitBotCoord;
@@ -703,7 +697,6 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             return;
         } else if(oppGrid[x][y] == 'C') {
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'C', 0, 1};
             botHitCarrier[countCarrier] = originalHitBotCoord;
@@ -711,7 +704,6 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             return;
         } else if(oppGrid[x][y] == 'B') {
             oppGrid[x][y] = '*';
-            probabilityGridOpp[x][y] = '*';
             printf("Hit!");
             Coordinate originalHitBotCoord = {x, y, 'B', 0, 1};
             botHitBattleShip[countBattleShip] = originalHitBotCoord;
@@ -1236,6 +1228,7 @@ void findBestTarget(int *bestX, int *bestY) {
             }
         }
     }
+    probabilityGridOpp[*bestX][*bestY] = '*';
 }
 
 // void debugPrintProbabilityGrid() {
