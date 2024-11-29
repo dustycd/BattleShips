@@ -657,6 +657,15 @@ int isOutOfBounds(int x, int y) {
     }
 }
 
+char intToChar(int number) {
+    if (number >= 0 && number <= 9) {
+        return 'A' + number;
+    } else {
+        // Handle invalid input
+        printf("Invalid input: %d. Input must be between 0 and 9.\n", number);
+        return '\0'; // Return null character for invalid input
+    }
+}
 
 void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode , char coord[] , Coordinate *current) {
     printf("entered botfire function\n");
@@ -944,8 +953,14 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
     if(!isEmpty(botHitCarrier) && If_sunk(*Carrier , Player) == 0) { //if didnt sink
         printf("entered carrier while loop\n");
-        int x = botHitCarrier[countCarrier].x;
-        int y = botHitCarrier[countCarrier].y;
+
+        if (countCarrier >= 10 || countCarrier < 0) {
+            printf("Error: countCarrier out of bounds\n");
+            return; // Handle the error gracefully
+        }
+        printf("botHitCarrier[%d]: x=%d, y=%d, shipLetter=%c, isInitialized=%d\n", countCarrier, botHitCarrier[countCarrier].x, botHitCarrier[countCarrier].y, botHitCarrier[countCarrier].shipLetter, botHitCarrier[countCarrier].isInitialized);
+        int x = botHitCarrier[countCarrier - 1].x;
+        int y = botHitCarrier[countCarrier - 1].y;
         //here x and y are 0 and 0 it shouldnt be like that
 
         printf("X: %d , Y: %d\n" , x , y);
@@ -959,7 +974,14 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             current->x = botHitCarrier[0].x;
             current->y = botHitCarrier[0].y;
         }
-
+        coord[0] = intToChar(y);
+        if(x == 9) {
+            coord[1]= 1;
+            coord[2] = 0;
+        } else {
+            coord[1] = x+1;
+            coord[2] = '\0';
+        }
         //we need to check if oppgrid at x and y is water if it is we have to back track
         //we were thinking about if we need to back track we delete all the components in the array except the original hit so at index 0
         if(!isOutOfBounds(x+1, y)) {
@@ -1350,6 +1372,12 @@ int main() {
     char GridTwo[SIZE][SIZE] = {'~'};
     initializeGrid(probabilityGridOpp);
 
+    for (int i = 0; i < 10; i++) {
+        botHitCarrier[i] = (Coordinate){0, 0, '\0', 0, 0};  // Initialize all fields
+        botHitBattleShip[i] = (Coordinate){0, 0, '\0', 0, 0};
+        botHitDestroyer[i] = (Coordinate){0, 0, '\0', 0, 0};
+        botHitSubmarine[i] = (Coordinate){0, 0, '\0', 0, 0};
+    }
 
     //ask if single player or multiplayer
     int howtoplay;
