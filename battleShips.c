@@ -822,7 +822,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     botHitBattleShip[countBattleShip].shipLetter = current->shipLetter;
 
                     countBattleShip++;
-
+                    if(Battleship->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Battleship , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -895,7 +897,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     botHitBattleShip[countBattleShip].shipLetter = current->shipLetter;
 
                     countBattleShip++;
-
+                    if(Battleship->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Battleship , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -973,7 +977,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     botHitBattleShip[countBattleShip].shipLetter = current->shipLetter;
 
                     countBattleShip++;
-
+                    if(Battleship->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Battleship , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
@@ -1042,6 +1048,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countBattleShip++;
 
+                    if(Battleship->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Battleship , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
@@ -1143,7 +1152,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     botHitSubmarine[countSubmarine].shipLetter = current->shipLetter;
 
                     countSubmarine++;
-
+                    if(Submarine->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Submarine , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1217,6 +1228,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
+                    if(Submarine->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Submarine , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1295,6 +1309,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
+                    if(Submarine->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Submarine , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
@@ -1363,6 +1380,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
+                    if(Submarine->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Submarine , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
@@ -1468,6 +1488,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
+                    if(Carrier->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Carrier , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1541,6 +1564,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
+                    if(Carrier->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Carrier , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1619,6 +1645,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
+                    if(Carrier->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Carrier , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
@@ -1687,6 +1716,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
+                    if(Carrier->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Carrier , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
@@ -1788,6 +1820,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
+                    if(Destroyer->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Destroyer , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1861,6 +1896,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
+                    if(Destroyer->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Destroyer , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
@@ -1939,6 +1977,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
+                    if(Destroyer->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Destroyer , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
@@ -2007,6 +2048,9 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
+                    if(Destroyer->sink == 0){
+                        Player->numShips++;
+                    }
                     if(If_sunk(Destroyer , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
