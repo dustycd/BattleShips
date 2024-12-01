@@ -2170,17 +2170,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     if(If_sunk(Carrier, Player)== 0 && current->direction ==0)
     {
         (*j) +=5;
-        if(*j>=9)
+        *j %= 10; 
+        if (*j == 0)
         {
             (*i)++;
-            *j=0;
-        }
-        if(*i>9)
-        {
-            *i=0;
+            *i %= 10; 
         }
         coord[0] = 'A' + *j;
-        coord[1] = '1' + *i;
+        coord[1] = '0' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         printf("CARRIER");
         return 0;
@@ -2188,17 +2185,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     else if(If_sunk(Battleship, Player)== 0 && current->direction ==0)
     {
         (*j)+=4;
-        if(*j>=9)
+        *j %= 10;  
+        if (*j == 0)
         {
             (*i)++;
-            *j=0;
-        }
-        if(*i>9)
-        {
-            *i=0;
+            *i %= 10; 
         }
         coord[0] = 'A' + *j;
-        coord[1] = '1' + *i;
+        coord[1] = '0' + *i;
         printf("BATTLESHIP");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
@@ -2206,17 +2200,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     else if(If_sunk(Destroyer, Player)== 0 && current->direction ==0)
     {
         (*j)+=3;
-        if(*j>=9)
+        *j %= 10;  
+        if (*j == 0)
         {
             (*i)++;
-            *j=0;
-        }
-        if(*i>9)
-        {
-            *i=0;
+            *i %= 10;  
         }
         coord[0] = 'A' + *j;
-        coord[1] = '1' + *i;
+        coord[1] = '0' + *i;
         printf("DESTROYER");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
@@ -2224,17 +2215,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     else if(If_sunk(Submarine, Player)== 0 && current->direction ==0)
     {
         (*j)+=2;
-        if(*j>=9)
+        *j %= 10; 
+        if (*j == 0)
         {
             (*i)++;
-            *j=0;
-        }
-        if(*i>9)
-        {
-            *i=0;
+            *i %= 10;  
         }
         coord[0] = 'A' + *j;
-        coord[1] = '1' + *i;
+        coord[1] = '0' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
