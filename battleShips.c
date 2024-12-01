@@ -2266,7 +2266,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     return 1;
 }
 
-void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
+void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current, Player *CPU) {
     printf("entered hard mde\n");
     updateProbabilityGrid(ships, numShips);
     // debugPrintProbabilityGrid();
@@ -2293,7 +2293,7 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
     printf("%c", coord[2]);
 
 
-    botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+    botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
     updateProbabilityGrid(ships, numShips);
     debugPrintProbabilityGrid();
     printf("Bot fire call done\n");
@@ -2310,7 +2310,7 @@ void ShowAvailableMoves(Player Player)
     printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
 
-void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j, int*r){
+void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j, int*r , Player *CPU ){
     printf("entered play game function\n");
     int numships = Player1->numShips;
     switch (difficulty)
@@ -2326,7 +2326,7 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
         break;
     case 3:
     printf("entered case 3 in switch\n");
-        HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current);
+        HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current , CPU);
         printf("finished hardmode\n");
         break;
     case 4:
@@ -2541,7 +2541,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi , &Player1);
+                    fire(GridTwo , &BotCarrier , &BotBattleship , &BotDestroyer , &BotSubmarine , difficulty , coordi , &Player1);
                     break;
                 case 'R':
                     coordi[0] = command[6];
@@ -2585,7 +2585,7 @@ int main() {
                     
                 printf("its %s's turn to play!",stp);
                 printf("Before play game call\n");
-                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr);
+                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr , &CPU);
 
                 
                 wonthegame = whoWins(Player1 , CPU);
@@ -2600,7 +2600,7 @@ int main() {
                     }
                 }else  if(firstPlayer == 1){
                     printf("Before play game call\n");
-                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr);
+                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr , &CPU);
 
                     wonthegame = whoWins(Player1 , CPU);
                     if(wonthegame == 1){
@@ -2632,7 +2632,7 @@ int main() {
                     coordi[0] = command[5];
                     coordi[1] = command[6];
                     coordi[2] = command[7];
-                    fire(GridTwo , &P2Carrier , &P2Battleship , &P2Destroyer , &P2Submarine , difficulty , coordi, &Player1);
+                    fire(GridTwo ,  &BotCarrier , &BotBattleship , &BotDestroyer , &BotSubmarine , difficulty , coordi, &Player1);
                     break;
                 case 'R':
                     coordi[0] = command[6];
