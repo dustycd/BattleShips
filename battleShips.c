@@ -2163,66 +2163,74 @@ void debugPrintProbabilityGrid() {
         printf("\n");
     }
 }
-int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current, int *i, int*j)
+int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current, int *i, int*j, int*r)
 {
     char coord[3];
     printf("entered medium mde\n");
-    if(If_sunk(Carrier, Player)== 0 && current->direction ==0)
+    if(If_sunk(Carrier, Player)== 0 && current->direction ==0 && *r <1)
     {
-        (*j) +=5;
-        *j %= 10; 
-        if (*j == 0)
-        {
+        *j += 5;   
+        if (*j > 9) {     
             (*i)++;
-            *i %= 10; 
+            *j %= 10;
+        }          
+        if (*i > 9) {     
+            (*r)++;
+            *i %= 10;            
         }
         coord[0] = 'A' + *j;
-        coord[1] = '0' + *i;
+        coord[1] = '1' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         printf("CARRIER");
         return 0;
     }
-    else if(If_sunk(Battleship, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Battleship, Player)== 0 && current->direction ==0 && *r <2) 
     {
-        (*j)+=4;
-        *j %= 10;  
-        if (*j == 0)
-        {
+        *j += 4;   
+        if (*j > 9) {     
             (*i)++;
-            *i %= 10; 
+            *j %= 10;
+        }          
+        if (*i > 9) {     
+            (*r)++;
+            *i %= 10;            
         }
         coord[0] = 'A' + *j;
-        coord[1] = '0' + *i;
+        coord[1] = '1' + *i;
         printf("BATTLESHIP");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
-    else if(If_sunk(Destroyer, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Destroyer, Player)== 0 && current->direction ==0 && *r<3)
     {
-        (*j)+=3;
-        *j %= 10;  
-        if (*j == 0)
-        {
+        *j += 3;            
+        if (*j > 9) {     
             (*i)++;
-            *i %= 10;  
+            *j %= 10;
+        }          
+        if (*i > 9) {     
+            (*r)++;
+            *i %= 10;            
         }
         coord[0] = 'A' + *j;
-        coord[1] = '0' + *i;
+        coord[1] = '1' + *i;
         printf("DESTROYER");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
-    else if(If_sunk(Submarine, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Submarine, Player)== 0 && current->direction ==0 && *r<4)
     {
-        (*j)+=2;
-        *j %= 10; 
-        if (*j == 0)
-        {
+        *j += 2;             
+        if (*j > 9) {     
             (*i)++;
-            *i %= 10;  
+            *j %= 10;
+        }          
+        if (*i > 9) {     
+            (*r)++;
+            *i %= 10;            
         }
         coord[0] = 'A' + *j;
-        coord[1] = '0' + *i;
+        coord[1] = '1' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
@@ -2279,7 +2287,7 @@ void ShowAvailableMoves(Player Player)
     printf("5. Torpedo (Available: %d)\n", Player.AllowedTorpedo);
 }
 
-void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j){
+void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j, int*r){
     printf("entered play game function\n");
     int numships = Player1->numShips;
     switch (difficulty)
@@ -2289,7 +2297,7 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
         break;
     case 2:
         printf("entered case 2 in switch\n");
-        MediumMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current, i, j);
+        MediumMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current, i, j, r);
         printf("finished mediummode\n");
         break;
     case 3:
@@ -2326,6 +2334,7 @@ int main() {
     char GridTwo[SIZE][SIZE] = {'~'};
     int mediumi=0;
     int mediumj=-1;
+    int mediumr =0;
     initializeGrid(probabilityGridOpp);
 
     for (int i = 0; i < 10; i++) {
@@ -2552,7 +2561,7 @@ int main() {
                     
                 printf("its %s's turn to play!",stp);
                 printf("Before play game call\n");
-                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj);
+                PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr);
 
                 
                 wonthegame = whoWins(Player1 , CPU);
@@ -2567,7 +2576,7 @@ int main() {
                     }
                 }else  if(firstPlayer == 1){
                     printf("Before play game call\n");
-                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj);
+                    PlayGame(chooselevel , GridOne , p1ships , &P1Carrier , &P1Battleship , &P1Destroyer , &P1Submarine , &Player1 , difficulty, &current, &mediumi, &mediumj, &mediumr);
 
                     wonthegame = whoWins(Player1 , CPU);
                     if(wonthegame == 1){
