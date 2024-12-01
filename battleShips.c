@@ -2236,6 +2236,8 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     }
     else if(current->direction !=0)
     {
+        coord[0] = 'A' + *j;
+        coord[1] = '1' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
