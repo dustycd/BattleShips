@@ -161,6 +161,7 @@ int If_sunk(Ship *Ship, Player * Player)
     if(Ship->size == Ship->hits && Ship->sink ==0)
     {
         Player->numShips--;
+        Ship->sink =1;
         return 1;
     }
     else if(Ship->size == Ship->hits && Ship->sink ==1)
