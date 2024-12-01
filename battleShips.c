@@ -14,6 +14,7 @@ typedef struct
     int size;
     int hits;
     char letter;
+    int sink;
 } Ship;
 
 typedef struct 
@@ -155,11 +156,15 @@ int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char
     
 }
 
-int If_sunk(Ship Ship, Player * Player)
+int If_sunk(Ship *Ship, Player * Player)
 {
-    if(Ship.size == Ship.hits)
+    if(Ship->size == Ship->hits && Ship->sink ==0)
     {
         Player->numShips--;
+        return 1;
+    }
+    else if(Ship->size == Ship->hits && Ship->sink ==1)
+    {
         return 1;
     }
     else
@@ -189,7 +194,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Submarine->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Submarine, Player)) {
+            if (If_sunk(Submarine, Player)) {
                 printf("You sunk the %s!\n", Submarine->name);
                 Player->AllowedTorpedo = 1;
                 Player->AllowedArtilery = 1;
@@ -205,7 +210,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Carrier->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Carrier, Player)) {
+            if (If_sunk(Carrier, Player)) {
                 printf("You sunk the %s!\n", Carrier->name);
                 Player->AllowedTorpedo = 1;
                 Player->AllowedArtilery = 1;
@@ -222,7 +227,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             probabilityGridOpp[x][y] = '*';
             Destroyer->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Destroyer, Player)) {
+            if (If_sunk(Destroyer, Player)) {
                 printf("You sunk the %s!\n", Destroyer->name);
                 Player->AllowedTorpedo = 1;
                 Player->AllowedArtilery = 1;
@@ -238,7 +243,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
             oppGrid[x][y] = '*';
             Battleship->hits++;
             printf("Hit!\n");
-            if (If_sunk(*Battleship, Player)) {
+            if (If_sunk(Battleship, Player)) {
                 printf("You sunk the %s!\n", Battleship->name);
                 Player->AllowedTorpedo = 1;
                 Player->AllowedArtilery = 1;
@@ -273,7 +278,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
     if(oppGrid[x][y] == 'S') { //submarine
         oppGrid[x][y] = '*';
         Submarine->hits++;
-        if (If_sunk(*Submarine, Player)) {
+        if (If_sunk(Submarine, Player)) {
             printf("You sunk the %s!\n", Submarine->name);
             Player->AllowedTorpedo = 1;
             Player->AllowedArtilery = 1;
@@ -289,7 +294,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
         oppGrid[x][y] = '*';
         Carrier->hits++;
         printf("Hit!\n");
-        if (If_sunk(*Carrier, Player)) {
+        if (If_sunk(Carrier, Player)) {
             printf("You sunk the %s!\n", Carrier->name);
             Player->AllowedTorpedo = 1;
             Player->AllowedArtilery = 1;
@@ -304,7 +309,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
         oppGrid[x][y] = '*';
         Destroyer->hits++;
         printf("Hit!\n");
-        if (If_sunk(*Destroyer, Player)) {
+        if (If_sunk(Destroyer, Player)) {
             printf("You sunk the %s!\n", Destroyer->name);
             Player->AllowedTorpedo = 1;
             Player->AllowedArtilery = 1;
@@ -319,7 +324,7 @@ void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, 
         oppGrid[x][y] = '*';
         Battleship->hits++;
         printf("Hit!\n");
-        if (If_sunk(*Battleship, Player)) {
+        if (If_sunk(Battleship, Player)) {
             printf("You sunk the %s!\n", Battleship->name);
             Player->AllowedTorpedo = 1;
             Player->AllowedArtilery = 1;
@@ -382,7 +387,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 oppGrid[i][j] = '*';
                 Submarine->hits++;
                 printf("Hit!\n");
-                if (If_sunk(*Submarine, Player)) {
+                if (If_sunk(Submarine, Player)) {
                     printf("You sunk the %s!\n", Submarine->name);
                     Player->AllowedTorpedo = 1;
                     Player->AllowedArtilery = 1;
@@ -398,7 +403,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 oppGrid[i][j] = '*';
                 Carrier->hits++;
                 printf("Hit!\n");
-                if (If_sunk(*Carrier, Player)) {
+                if (If_sunk(Carrier, Player)) {
                     printf("You sunk the %s!\n", Carrier->name);
                     Player->AllowedTorpedo = 1;
                     Player->AllowedArtilery = 1;
@@ -414,7 +419,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 oppGrid[i][j] = '*';
                 Destroyer->hits++;
                 printf("Hit!\n");
-                if (If_sunk(*Destroyer, Player)) {
+                if (If_sunk(Destroyer, Player)) {
                     printf("You sunk the %s!\n", Destroyer->name);
                     Player->AllowedTorpedo = 1;
                     Player->AllowedArtilery = 1;
@@ -430,7 +435,7 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
                 oppGrid[i][j] = '*';
                 Battleship->hits++;
                 printf("Hit!\n");
-                if (If_sunk(*Battleship, Player)) {
+                if (If_sunk(Battleship, Player)) {
                     printf("You sunk the %s!\n", Battleship->name);
                     Player->AllowedSmokeScreen++;
                     Player->AllowedArtilery = 1;
@@ -753,7 +758,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
         }
     }
 
-    if(!isEmpty(botHitBattleShip) && If_sunk(*Battleship , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitBattleShip) && If_sunk(Battleship , Player) == 0) { //if didnt sink
         printf("entered battleship while loop\n");
         
 
@@ -817,7 +822,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countBattleShip++;
 
-                    if(If_sunk(*Battleship , Player) == 1){
+                    if(If_sunk(Battleship , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
@@ -890,7 +895,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countBattleShip++;
 
-                    if(If_sunk(*Battleship , Player) == 1){
+                    if(If_sunk(Battleship , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
@@ -968,7 +973,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countBattleShip++;
 
-                    if(If_sunk(*Battleship , Player) == 1){
+                    if(If_sunk(Battleship , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
                             botHitBattleShip[i].direction = 0;
@@ -1036,7 +1041,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countBattleShip++;
 
-                    if(If_sunk(*Battleship , Player) == 1){
+                    if(If_sunk(Battleship , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitBattleShip[i].isInitialized = 0;
                             botHitBattleShip[i].direction = 0;
@@ -1075,7 +1080,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             }
     }
     
-    if(!isEmpty(botHitSubmarine) && If_sunk(*Submarine , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitSubmarine) && If_sunk(Submarine , Player) == 0) { //if didnt sink
         printf("entered submarine while loop\n");
 
         if (countSubmarine >= 10 || countSubmarine < 0) {
@@ -1138,7 +1143,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
-                    if(If_sunk(*Submarine , Player) == 1){
+                    if(If_sunk(Submarine , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
@@ -1211,7 +1216,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
-                    if(If_sunk(*Submarine , Player) == 1){
+                    if(If_sunk(Submarine , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
@@ -1289,7 +1294,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
-                    if(If_sunk(*Submarine , Player) == 1){
+                    if(If_sunk(Submarine , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
                             botHitSubmarine[i].direction = 0;
@@ -1357,7 +1362,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countSubmarine++;
 
-                    if(If_sunk(*Submarine , Player) == 1){
+                    if(If_sunk(Submarine , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitSubmarine[i].isInitialized = 0;
                             botHitSubmarine[i].direction = 0;
@@ -1399,7 +1404,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
 
 
-    if(!isEmpty(botHitCarrier) && If_sunk(*Carrier , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitCarrier) && If_sunk(Carrier , Player) == 0) { //if didnt sink
         printf("entered carrier while loop\n");
 
         if (countCarrier >= 10 || countCarrier < 0) {
@@ -1462,7 +1467,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
-                    if(If_sunk(*Carrier , Player) == 1){
+                    if(If_sunk(Carrier , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
@@ -1535,7 +1540,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
-                    if(If_sunk(*Carrier , Player) == 1){
+                    if(If_sunk(Carrier , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
@@ -1613,7 +1618,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
-                    if(If_sunk(*Carrier , Player) == 1){
+                    if(If_sunk(Carrier , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
                             botHitCarrier[i].direction = 0;
@@ -1681,7 +1686,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countCarrier++;
 
-                    if(If_sunk(*Carrier , Player) == 1){
+                    if(If_sunk(Carrier , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitCarrier[i].isInitialized = 0;
                             botHitCarrier[i].direction = 0;
@@ -1720,7 +1725,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
             }
     }
     
-    if(!isEmpty(botHitDestroyer) && If_sunk(*Destroyer , Player) == 0) { //if didnt sink
+    if(!isEmpty(botHitDestroyer) && If_sunk(Destroyer , Player) == 0) { //if didnt sink
         printf("entered destroyer while loop\n");
 
         if (countDestroyer >= 10 || countDestroyer < 0) {
@@ -1782,7 +1787,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
-                    if(If_sunk(*Destroyer , Player) == 1){
+                    if(If_sunk(Destroyer , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
@@ -1855,7 +1860,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
-                    if(If_sunk(*Destroyer , Player) == 1){
+                    if(If_sunk(Destroyer , Player) == 1){
                         printf("entered if sunk if statement");
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
@@ -1933,7 +1938,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
-                    if(If_sunk(*Destroyer , Player) == 1){
+                    if(If_sunk(Destroyer , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
                             botHitDestroyer[i].direction = 0;
@@ -2001,7 +2006,7 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
 
                     countDestroyer++;
 
-                    if(If_sunk(*Destroyer , Player) == 1){
+                    if(If_sunk(Destroyer , Player) == 1){
                         for(int i = 0 ; i < 5 ; i++){
                             botHitDestroyer[i].isInitialized = 0;
                             botHitDestroyer[i].direction = 0;
@@ -2117,7 +2122,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
 {
     char coord[3];
     printf("entered medium mde\n");
-    if(If_sunk(*Carrier, Player)== 0 && current->direction ==0)
+    if(If_sunk(Carrier, Player)== 0 && current->direction ==0)
     {
         (*j) +=5;
         if(*j>=9)
@@ -2135,7 +2140,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         printf("CARRIER");
         return 0;
     }
-    else if(If_sunk(*Battleship, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Battleship, Player)== 0 && current->direction ==0)
     {
         (*j)+=4;
         if(*j>=9)
@@ -2153,7 +2158,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
-    else if(If_sunk(*Destroyer, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Destroyer, Player)== 0 && current->direction ==0)
     {
         (*j)+=3;
         if(*j>=9)
@@ -2171,7 +2176,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
-    else if(If_sunk(*Submarine, Player)== 0 && current->direction ==0)
+    else if(If_sunk(Submarine, Player)== 0 && current->direction ==0)
     {
         (*j)+=2;
         if(*j>=9)
@@ -2188,7 +2193,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
     }
-    else if(current->direction ==1)
+    else if(current->direction !=0)
     {
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
         return 0;
@@ -2269,18 +2274,18 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
 int main() {
     int rows = SIZE;
     int columns = SIZE;
-    Ship P1Carrier= {"Carrier", 5, 0, 'C'};     
-    Ship P1Battleship= {"Battleship", 4, 0,'B'};       
-    Ship P1Destroyer= {"Destroyer", 3, 0,'D'};
-    Ship P1Submarine= {"Submarine", 2, 0,'S'};
-    Ship P2Carrier= {"Carrier", 5, 0,'C'};     
-    Ship P2Battleship= {"Battleship", 4, 0,'B'};       
-    Ship P2Destroyer= {"Destroyer", 3, 0,'D'};
-    Ship P2Submarine= {"Submarine", 2, 0,'S'};
-    Ship BotCarrier= {"Carrier", 5, 0,'C'};     
-    Ship BotBattleship= {"Battleship", 4, 0,'B'};       
-    Ship BotDestroyer= {"Destroyer", 3, 0,'D'};
-    Ship BotSubmarine= {"Submarine", 2, 0,'S'};
+    Ship P1Carrier= {"Carrier", 5, 0, 'C', 0};     
+    Ship P1Battleship= {"Battleship", 4, 0,'B', 0};       
+    Ship P1Destroyer= {"Destroyer", 3, 0,'D', 0};
+    Ship P1Submarine= {"Submarine", 2, 0,'S', 0};
+    Ship P2Carrier= {"Carrier", 5, 0,'C', 0};     
+    Ship P2Battleship= {"Battleship", 4, 0,'B', 0};       
+    Ship P2Destroyer= {"Destroyer", 3, 0,'D', 0};
+    Ship P2Submarine= {"Submarine", 2, 0,'S', 0};
+    Ship BotCarrier= {"Carrier", 5, 0,'C', 0};     
+    Ship BotBattleship= {"Battleship", 4, 0,'B', 0};       
+    Ship BotDestroyer= {"Destroyer", 3, 0,'D', 0};
+    Ship BotSubmarine= {"Submarine", 2, 0,'S', 0};
 
     char GridOne[SIZE][SIZE] = {'~'};
     char GridTwo[SIZE][SIZE] = {'~'};
