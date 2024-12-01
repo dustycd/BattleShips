@@ -2163,6 +2163,27 @@ void debugPrintProbabilityGrid() {
         printf("\n");
     }
 }
+
+void EasyMode(char grid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current) {
+
+    int y = rand() % 10; // for letter
+    int x = rand() % 10; // for number
+
+    char coord[3];
+    // char yCoord = intToChar(y);
+
+    coord[0] = 'A' + y;
+    coord[1] = '1' + x;
+    if (x == 9) { // Handle row 10
+        coord[1] = '1';
+        coord[2] = '0';
+    } else {
+        coord[2] = '\0';
+    }
+    printf("Coord[0]: %c, Coord[1]: %c, Coord[2]: %c", coord[0], coord[1], coord[2]);
+    botFire(grid, Carrier, Battleship, Destroyer, Submarine, Player, mode, coord, current);
+}
+
 int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, Coordinate *current, int *i, int*j, int*r)
 {
     char coord[3];
@@ -2295,7 +2316,8 @@ void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P
     switch (difficulty)
     {
     case 1:
-        /* code */
+        printf("entered case 1 in switch\n");
+        EasyMode(oppgrid , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current);
         break;
     case 2:
         printf("entered case 2 in switch\n");
