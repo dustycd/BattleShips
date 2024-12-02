@@ -41,10 +41,10 @@ static int countBattleShip = 0;
 static int countDestroyer = 0;
 static int countSubmarine = 0;
 static int countCarrier = 0;
-static Coordinate botHitBattleShip[10]; // initalize to size of the ship
-static Coordinate botHitDestroyer[10]; // initialize to size of the ship
-static Coordinate botHitSubmarine[10]; // initialize to size of the ship
-static Coordinate botHitCarrier[10]; // initialize to size of the ship
+static Coordinate botHitBattleShip[10];
+static Coordinate botHitDestroyer[10];
+static Coordinate botHitSubmarine[10];
+static Coordinate botHitCarrier[10];
 
 
 void initializeGrid(char grid[SIZE][SIZE]) {
@@ -138,7 +138,7 @@ void print_hidden_grid(char grid[SIZE][SIZE], int difficulty)
     }
 }
 
-
+// checks whether ships are placed correctly by users
 int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char orientation){
     if(orientation == 'h' || orientation == 'H'){
         if(y + shipSize > SIZE) return 0;
@@ -158,13 +158,13 @@ int isValidShipPlacement(char grid[SIZE][SIZE], int x, int y, int shipSize, char
 
 int If_sunk(Ship *Ship, Player * Player)
 {
-    if(Ship->size == Ship->hits && Ship->sink ==0)
+    if(Ship->size == Ship->hits && Ship->sink ==0) // it wasnt sunk yet
     {
         Player->numShips--;
         Ship->sink =1;
         return 1;
     }
-    else if(Ship->size == Ship->hits && Ship->sink ==1)
+    else if(Ship->size == Ship->hits && Ship->sink ==1) // it was sunk
     {
         return 1;
     }
@@ -180,9 +180,9 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
     int x ;
     int y =convertCoordinatesY(coord);
 
-    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // B3
+    if (coord[1] >= '1' && coord[1] <= '9' && coord[2] == '\0') { // handles cases like B3
         x = convertCoordinatesX(coord);
-    } else if (coord[1] == '1' && coord[2] == '0') { // A10
+    } else if (coord[1] == '1' && coord[2] == '0') { // handles cases like A10
         x = 9;  // Since '10' corresponds to index 9 in a 0-based system
     } else {
         printf("Invalid coordinates. You lose your turn.");
@@ -255,12 +255,12 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
                 Player->AllowedTorpedo = 0;
                 Player->AllowedArtilery = 0;
             }
-        }else if(oppGrid[x][y] == '*'){
+        }else if(oppGrid[x][y] == '*'){ // already hit
             printf("This coordinates has already been hit. You loose turn!");
             Player->AllowedTorpedo = 0;
             Player->AllowedArtilery = 0;
         }
-        else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed
+        else if (mode == 0 && oppGrid[x][y] != 'S' && oppGrid[x][y] != 'C' && oppGrid[x][y] != 'D' && oppGrid[x][y] != 'B') { // else missed for easy mode
             oppGrid[x][y] = 'o';
             printf("Miss!\n");
             Player->AllowedTorpedo = 0;
@@ -274,7 +274,7 @@ void fire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destr
         
 }
 
-
+// made it to avoid repitition in artillery function
 void artilleryHelper(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player, int mode, int x, int y) {
     if(oppGrid[x][y] == 'S') { //submarine
         oppGrid[x][y] = '*';
@@ -372,14 +372,14 @@ void artillery(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *
         return;
     } 
 
-    if(y == 10 && x < 10) {
+    if(y == 10 && x < 10) { // handles cases if we were on the last row because we cant fire down
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, Player , mode, x, y);
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x+1, y);
-    } else if(x == 10 && y < 10) {
+    } else if(x == 10 && y < 10) { // handles cases if we were on the last column because we cant fire outside of the grid
         // remove up and down
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine, Player, mode, x, y);
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x, y+1);
-    } else if(x == 10 && y == 10) {
+    } else if(x == 10 && y == 10) { // if it was called on the bottom right corner, J10
         artilleryHelper(oppGrid, Carrier, Battleship, Destroyer, Submarine , Player, mode, x, y);
     } else {
         for(int i = x; i <= x+1; i++) {
@@ -574,7 +574,7 @@ void Torpedo(char oppGrid[SIZE][SIZE], Ship *carrier, Ship *battleship, Ship *de
         }
     }else{
         for(int i = 0; i < 10; i++) {
-            artilleryHelper(oppGrid, carrier, battleship, destroyer, submarine, player , mode, i, y);
+            artilleryHelper(oppGrid, carrier, battleship, destroyer, submarine, player , mode, i, y); // used this to fire at the entire row/column since logic to fire is the same in this helper method
         }
     }
 }
@@ -630,11 +630,11 @@ int whoWins(Player  Player1, Player  Player2)
 {
     if(Player1.numShips == 0 && Player2.numShips != 0)
     {
-        return 2;
+        return 2; // player 2 wins
     }
     else if(Player2.numShips == 0 && Player1.numShips != 0)
     {
-        return 1;
+        return 1; // player 1 wins
     }
     else
     {
@@ -646,9 +646,9 @@ int whoWins(Player  Player1, Player  Player2)
 
 int isEmpty(Coordinate x[]) {
     if(x[0].isInitialized == 0) {
-        return 1;
+        return 1; // its empty
     } else {
-        return 0;
+        return 0; // it contains coordinates
     }
 }
 
@@ -2139,7 +2139,7 @@ void updateProbabilityGrid(Ship ships[], int numShips) {
 
 void findBestTarget(int *bestX, int *bestY, Coordinate *current) {
     double maxProbability = -1.0;
-
+    // loop over the grid and update to max as we go along
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (probabilityGrid[i][j] > maxProbability) {
@@ -2167,7 +2167,6 @@ void EasyMode(char grid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Dest
     int x = rand() % 10; // for number
 
     char coord[3];
-    // char yCoord = intToChar(y);
 
     coord[0] = 'A' + y;
     coord[1] = '1' + x;
@@ -2185,14 +2184,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     char coord[3];
     if(If_sunk(Carrier, CPU)== 0 && current->direction ==0 && *r <1)
     {
-        *j += 5;   
+        *j += 5;   // hits every five chunks cause its the size of this ship
         if (*j > 9) {     
             (*i)++;
-            *j %= 10;
+            *j %= 10; // ensures that we dont leave boundry
         }          
         if (*i > 9) {     
             (*r)++;
-            *i %= 10;            
+            *i %= 10;   // ensures that we dont leave boundry         
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
@@ -2201,14 +2200,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     }
     else if(If_sunk(Battleship, CPU)== 0 && current->direction ==0 && *r <2) 
     {
-        *j += 4;   
+        *j += 4;   // hits every four chunks cause its the size of this ship
         if (*j > 9) {     
             (*i)++;
-            *j %= 10;
+            *j %= 10; // ensures that we dont leave boundry
         }          
         if (*i > 9) {     
             (*r)++;
-            *i %= 10;            
+            *i %= 10;  // ensures that we dont leave boundry
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
@@ -2217,14 +2216,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     }
     else if(If_sunk(Destroyer, CPU)== 0 && current->direction ==0 && *r<3)
     {
-        *j += 3;            
+        *j += 3;         // hits every three chunks cause its the size of this ship   
         if (*j > 9) {     
             (*i)++;
-            *j %= 10;
+            *j %= 10; // ensures that we dont leave boundry
         }          
         if (*i > 9) {     
             (*r)++;
-            *i %= 10;            
+            *i %= 10;     // ensures that we dont leave boundry       
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
@@ -2233,14 +2232,14 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
     }
     else if(If_sunk(Submarine, CPU)== 0 && current->direction ==0 && *r<4)
     {
-        *j += 2;             
+        *j += 2;             // hits every two chunks cause its the size of this ship
         if (*j > 9) {     
             (*i)++;
-            *j %= 10;
+            *j %= 10; // ensures that we dont leave boundry
         }          
         if (*i > 9) {     
             (*r)++;
-            *i %= 10;            
+            *i %= 10;    // ensures that we dont leave boundry        
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
@@ -2259,7 +2258,7 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
 }
 
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player1, int mode, Coordinate *current, Player *CPU) {
-    updateProbabilityGrid(ships, numShips);
+    updateProbabilityGrid(ships, numShips); //check new probabilities each time
     // debugPrintProbabilityGrid();
 
     int bestX;
@@ -2280,8 +2279,8 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
     printf("%c", coord[2]);
 
 
-    botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
-    updateProbabilityGrid(ships, numShips);
+    botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current); // send the most probable coordinate to botFire
+    // updateProbabilityGrid(ships, numShips);//for testing
     //debugPrintProbabilityGrid();
     printf("Bot fire call done\n");
     
@@ -2528,13 +2527,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridTwo , coordi , &Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridOne , &Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
@@ -2619,13 +2618,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridTwo , coordi , &Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridOne , &Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
@@ -2812,13 +2811,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridTwo , coordi , &Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridOne , &Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
@@ -2874,13 +2873,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridOne , coordi , &Player2);
+                    Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridTwo , &Player2 ,coordi);
+                    SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
@@ -2930,13 +2929,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridOne , coordi , &Player2);
+                    Radar_Sweep(GridOne , coordi , &Player2);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridTwo , &Player2 ,coordi);
+                    SmokeScreen(GridTwo , &Player2 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
@@ -2988,13 +2987,13 @@ int main() {
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // Radar_Sweep(GridTwo , coordi , &Player1);
+                    Radar_Sweep(GridTwo , coordi , &Player1);
                     break;
                 case 'S':
                     coordi[0] = command[6];
                     coordi[1] = command[7];
                     coordi[2] = command[8];
-                    // SmokeScreen(GridOne , &Player1 ,coordi);
+                    SmokeScreen(GridOne , &Player1 ,coordi);
                     break;
                 case 'A':
                     coordi[0] = command[10];
