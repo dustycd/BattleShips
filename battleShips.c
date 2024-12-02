@@ -2062,7 +2062,6 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                         current->direction = 2;
                     }
                     probabilityGridOpp[x+1][y] = '*';
-                    printf("after using the fire function\n");
                     printf("%d", current->x);
                     printf("%d\n", current->y);
                     current->x = x+1; //to the right
@@ -2073,10 +2072,8 @@ void botFire(char oppGrid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *De
                     printf("%d\n", current->y);
                     //we have to store coordinates current in the array
                 } else {
-                    printf("before fire function\n");
                     fire(oppGrid, Carrier, Battleship, Destroyer, Submarine, mode, coord, Player);
                     probabilityGrid[x+1][y] = 'o';
-                    printf("after fire function\n");
                     printf("%d", current->x);
                     printf("%d\n", current->y);
                     current->x = x+1;
@@ -2154,7 +2151,7 @@ void findBestTarget(int *bestX, int *bestY, Coordinate *current) {
     }
 }
 
-void debugPrintProbabilityGrid() {
+/*void debugPrintProbabilityGrid() {
     printf("Current Probability Grid:\n");
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -2162,7 +2159,7 @@ void debugPrintProbabilityGrid() {
         }
         printf("\n");
     }
-}
+}*/
 
 void EasyMode(char grid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player1, int mode, Coordinate *current , Player *CPU) {
 
@@ -2180,14 +2177,12 @@ void EasyMode(char grid[SIZE][SIZE], Ship *Carrier, Ship *Battleship, Ship *Dest
     } else {
         coord[2] = '\0';
     }
-    printf("Coord[0]: %c, Coord[1]: %c, Coord[2]: %c", coord[0], coord[1], coord[2]);
     botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
 }
 
 int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j, int*r , Player *CPU)
 {
     char coord[3];
-    printf("entered medium mde\n");
     if(If_sunk(Carrier, CPU)== 0 && current->direction ==0 && *r <1)
     {
         *j += 5;   
@@ -2202,7 +2197,6 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
-        printf("CARRIER");
         return 0;
     }
     else if(If_sunk(Battleship, CPU)== 0 && current->direction ==0 && *r <2) 
@@ -2218,7 +2212,6 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
-        printf("BATTLESHIP");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
         return 0;
     }
@@ -2235,7 +2228,6 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
         }
         coord[0] = 'A' + *j;
         coord[1] = '1' + *i;
-        printf("DESTROYER");
         botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
         return 0;
     }
@@ -2267,17 +2259,12 @@ int MediumMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier,
 }
 
 void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, Ship *Battleship, Ship *Destroyer, Ship *Submarine, Player *Player1, int mode, Coordinate *current, Player *CPU) {
-    printf("entered hard mde\n");
     updateProbabilityGrid(ships, numShips);
     // debugPrintProbabilityGrid();
-    printf("updated the probality grid by using the function\n");
 
     int bestX;
     int bestY;
     findBestTarget(&bestX, &bestY, current);
-    printf("found the best target by calling the function\n");
-    printf("Best Y: %d " , bestY);
-    printf("Best X: %d " , bestX);
     char coord[3];
     coord[0] = 'A' + bestY;
     coord[1] = '1' + bestX;
@@ -2295,7 +2282,7 @@ void HardMode(char grid[SIZE][SIZE], Ship ships[], int numShips, Ship *Carrier, 
 
     botFire(grid, Carrier, Battleship, Destroyer, Submarine, CPU, mode, coord, current);
     updateProbabilityGrid(ships, numShips);
-    debugPrintProbabilityGrid();
+    //debugPrintProbabilityGrid();
     printf("Bot fire call done\n");
     
 }
@@ -2311,23 +2298,17 @@ void ShowAvailableMoves(Player Player)
 }
 
 void PlayGame(int difficulty, char oppgrid[SIZE][SIZE], Ship botships[], Ship *P1Carrier, Ship *P1Battleship, Ship *P1Destroyer, Ship *P1Submarine, Player *Player1, int mode, Coordinate *current, int *i, int*j, int*r , Player *CPU ){
-    printf("entered play game function\n");
     int numships = Player1->numShips;
     switch (difficulty)
     {
     case 1:
-        printf("entered case 1 in switch\n");
         EasyMode(oppgrid , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current , CPU);
         break;
     case 2:
-        printf("entered case 2 in switch\n");
         MediumMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current, i, j, r , CPU);
-        printf("finished mediummode\n");
         break;
     case 3:
-    printf("entered case 3 in switch\n");
         HardMode(oppgrid , botships , numships , P1Carrier , P1Battleship , P1Destroyer , P1Submarine , Player1 , mode, current , CPU);
-        printf("finished hardmode\n");
         break;
     case 4:
         /* code */
